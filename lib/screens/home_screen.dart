@@ -65,7 +65,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
           } else {
 
-            result = calculate(expression);
+            // Prevent error for incomplete expression
+            String lastChar =
+            expression[expression.length - 1];
+
+            if (![
+              '+',
+              '-',
+              '×',
+              '÷',
+              '%'
+            ].contains(lastChar)) {
+
+              result = calculate(expression);
+            }
           }
         }
 
@@ -75,9 +88,25 @@ class _HomeScreenState extends State<HomeScreen> {
       // EQUALS
       else if (value == '=') {
 
-        result = calculate(expression);
+        if (expression.isNotEmpty) {
 
-        isResultFinal = true;
+          String lastChar =
+          expression[expression.length - 1];
+
+          // Prevent "=" on incomplete equation
+          if (![
+            '+',
+            '-',
+            '×',
+            '÷',
+            '%'
+          ].contains(lastChar)) {
+
+            result = calculate(expression);
+
+            isResultFinal = true;
+          }
+        }
       }
 
       // NORMAL BUTTONS
@@ -90,6 +119,22 @@ class _HomeScreenState extends State<HomeScreen> {
         }
 
         expression += value;
+
+        String lastChar =
+        expression[expression.length - 1];
+
+        // Prevent live calculation
+        // if expression ends with operator
+        if ([
+          '+',
+          '-',
+          '×',
+          '÷',
+          '%'
+        ].contains(lastChar)) {
+
+          return;
+        }
 
         // Live preview result
         result = calculate(expression);
@@ -179,17 +224,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     size: 28,
                   ),
 
-                  Text(
-
-                    "Calculator",
-
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: primaryTextColor,
-                    ),
-                  ),
-
                   IconButton(
 
                     onPressed:
@@ -227,7 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       duration:
                       const Duration(
-                        milliseconds: 100,
+                        milliseconds: 80,
                       ),
 
                       style: TextStyle(
@@ -277,7 +311,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       duration:
                       const Duration(
-                        milliseconds: 100,
+                        milliseconds: 80,
                       ),
 
                       style: TextStyle(
