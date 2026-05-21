@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   String expression = "";
   String result = "0";
 
@@ -24,18 +25,25 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isResultFinal = false;
 
   final List<String> buttons = [
+
     'AC', '⌫', '%', '÷',
+
     '7', '8', '9', '×',
+
     '4', '5', '6', '-',
+
     '1', '2', '3', '+',
+
     '00', '0', '.', '='
   ];
 
   void onButtonClick(String value) {
+
     setState(() {
 
       // CLEAR
       if (value == 'AC') {
+
         expression = "";
         result = "0";
         isResultFinal = false;
@@ -43,13 +51,20 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // BACKSPACE
       else if (value == '⌫') {
+
         if (expression.isNotEmpty) {
-          expression =
-              expression.substring(0, expression.length - 1);
+
+          expression = expression.substring(
+            0,
+            expression.length - 1,
+          );
 
           if (expression.isEmpty) {
+
             result = "0";
+
           } else {
+
             result = calculate(expression);
           }
         }
@@ -59,15 +74,18 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // EQUALS
       else if (value == '=') {
+
         result = calculate(expression);
+
         isResultFinal = true;
       }
 
       // NORMAL BUTTONS
       else {
 
-        // If user starts typing after "="
+        // If user starts typing again after "="
         if (isResultFinal) {
+
           isResultFinal = false;
         }
 
@@ -80,33 +98,76 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   bool isOperator(String x) {
-    return ['%', '÷', '×', '-', '+', '='].contains(x);
+
+    return [
+      '%',
+      '÷',
+      '×',
+      '-',
+      '+',
+      '='
+    ].contains(x);
   }
 
   @override
   Widget build(BuildContext context) {
 
+    // SCREEN SIZE
+    double screenWidth =
+        MediaQuery.of(context).size.width;
+
+    double screenHeight =
+        MediaQuery.of(context).size.height;
+
+    // RESPONSIVE VALUES
+    double horizontalPadding =
+        screenWidth * 0.05;
+
+    double topGap =
+        screenHeight * 0.06;
+
+    double buttonSpacing =
+        screenWidth * 0.025;
+
+    double aspectRatio =
+    screenHeight < 700 ? 1.02 : 1.12;
+
+    // COLORS
     final bgColor =
-    widget.isDark ? Colors.black : Colors.white;
+    widget.isDark
+        ? Colors.black
+        : Colors.white;
 
     final primaryTextColor =
-    widget.isDark ? Colors.white : Colors.black;
+    widget.isDark
+        ? Colors.white
+        : Colors.black;
 
     final secondaryTextColor =
-    widget.isDark ? Colors.grey.shade600 : Colors.grey.shade500;
+    widget.isDark
+        ? Colors.grey.shade600
+        : Colors.grey.shade500;
 
     return Scaffold(
+
       backgroundColor: bgColor,
 
       body: SafeArea(
+
         child: Padding(
-          padding: const EdgeInsets.all(20),
+
+          padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding,
+            vertical: 20,
+          ),
 
           child: Column(
+
             children: [
 
               // TOP BAR
               Row(
+
                 mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
 
@@ -115,21 +176,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icon(
                     Icons.menu,
                     color: primaryTextColor,
+                    size: 28,
                   ),
 
                   Text(
+
                     "Calculator",
+
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                       color: primaryTextColor,
                     ),
                   ),
 
                   IconButton(
-                    onPressed: widget.toggleTheme,
+
+                    onPressed:
+                    widget.toggleTheme,
 
                     icon: Icon(
+
                       widget.isDark
                           ? Icons.light_mode
                           : Icons.dark_mode,
@@ -140,113 +207,179 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
 
-              const SizedBox(height: 50),
+              SizedBox(height: topGap),
 
-              // EQUATION
-              Align(
-                alignment: Alignment.centerRight,
+              // DISPLAY SECTION
+              Expanded(
 
-                child: Text(
-                  expression.isEmpty ? "0" : expression,
+                child: Column(
 
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
+                  mainAxisAlignment:
+                  MainAxisAlignment.end,
 
-                  style: TextStyle(
+                  crossAxisAlignment:
+                  CrossAxisAlignment.stretch,
 
-                    // BEFORE "="
-                    // Equation large + white
+                  children: [
 
-                    // AFTER "="
-                    // Equation small + grey
+                    // EQUATION
+                    AnimatedDefaultTextStyle(
 
-                    fontSize:
-                    isResultFinal ? 28 : 46,
+                      duration:
+                      const Duration(
+                        milliseconds: 100,
+                      ),
 
-                    fontWeight:
-                    isResultFinal
-                        ? FontWeight.w400
-                        : FontWeight.bold,
+                      style: TextStyle(
 
-                    color:
-                    isResultFinal
-                        ? secondaryTextColor
-                        : primaryTextColor,
-                  ),
+                        // BEFORE "="
+                        // Equation large + white
+
+                        // AFTER "="
+                        // Equation small + grey
+
+                        fontSize:
+                        isResultFinal
+                            ? 28
+                            : 48,
+
+                        fontWeight:
+                        isResultFinal
+                            ? FontWeight.w400
+                            : FontWeight.bold,
+
+                        color:
+                        isResultFinal
+                            ? secondaryTextColor
+                            : primaryTextColor,
+                      ),
+
+                      child: Text(
+
+                        expression.isEmpty
+                            ? "0"
+                            : expression,
+
+                        maxLines: 2,
+
+                        overflow:
+                        TextOverflow.ellipsis,
+
+                        textAlign:
+                        TextAlign.right,
+                      ),
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    // RESULT
+                    AnimatedDefaultTextStyle(
+
+                      duration:
+                      const Duration(
+                        milliseconds: 100,
+                      ),
+
+                      style: TextStyle(
+
+                        // BEFORE "="
+                        // Result small + grey
+
+                        // AFTER "="
+                        // Result large + white
+
+                        fontSize:
+                        isResultFinal
+                            ? 58
+                            : 30,
+
+                        fontWeight:
+                        isResultFinal
+                            ? FontWeight.bold
+                            : FontWeight.w400,
+
+                        color:
+                        isResultFinal
+                            ? primaryTextColor
+                            : secondaryTextColor,
+                      ),
+
+                      child: Text(
+
+                        result,
+
+                        maxLines: 1,
+
+                        overflow:
+                        TextOverflow.ellipsis,
+
+                        textAlign:
+                        TextAlign.right,
+                      ),
+                    ),
+                  ],
                 ),
               ),
 
-              const SizedBox(height: 15),
-
-              // RESULT
-              Align(
-                alignment: Alignment.centerRight,
-
-                child: Text(
-                  result,
-
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-
-                  style: TextStyle(
-
-                    // BEFORE "="
-                    // Result small + grey
-
-                    // AFTER "="
-                    // Result large + white
-
-                    fontSize:
-                    isResultFinal ? 56 : 28,
-
-                    fontWeight:
-                    isResultFinal
-                        ? FontWeight.bold
-                        : FontWeight.w400,
-
-                    color:
-                    isResultFinal
-                        ? primaryTextColor
-                        : secondaryTextColor,
-                  ),
-                ),
+              SizedBox(
+                height:
+                screenHeight * 0.03,
               ),
-
-              const SizedBox(height: 130),
 
               // BUTTONS
               Expanded(
+
                 flex: 2,
 
                 child: GridView.builder(
+
                   physics:
                   const NeverScrollableScrollPhysics(),
+
+                  padding: EdgeInsets.zero,
 
                   itemCount: buttons.length,
 
                   gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+                  SliverGridDelegateWithFixedCrossAxisCount(
+
                     crossAxisCount: 4,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.05,
+
+                    crossAxisSpacing:
+                    buttonSpacing,
+
+                    mainAxisSpacing:
+                    buttonSpacing,
+
+                    childAspectRatio:
+                    aspectRatio,
                   ),
 
-                  itemBuilder: (context, index) {
+                  itemBuilder:
+                      (context, index) {
 
-                    final button = buttons[index];
+                    final button =
+                    buttons[index];
 
                     return CalcButton(
 
                       text: button,
 
-                      color: isOperator(button)
-                          ? Colors.orange
-                          : widget.isDark
-                          ? const Color(0xFF1E1E1E)
-                          : const Color(0xFFF1F1F1),
+                      color:
+                      isOperator(button)
 
-                      onTap: () => onButtonClick(button),
+                          ? Colors.orange
+
+                          : widget.isDark
+
+                          ? const Color(
+                          0xFF1E1E1E)
+
+                          : const Color(
+                          0xFFF1F1F1),
+
+                      onTap:
+                          () => onButtonClick(button),
                     );
                   },
                 ),
