@@ -20,7 +20,7 @@ class CalcButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: color,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(150),
         ),
         child: Text(
           text,

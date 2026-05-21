@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // COLORS
     final bgColor =
     widget.isDark
-        ? Colors.black
+        ? const Color(0xFF041513)
         : Colors.white;
 
     final primaryTextColor =
