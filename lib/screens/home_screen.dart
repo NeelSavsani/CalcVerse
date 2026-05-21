@@ -180,7 +180,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // COLORS
     final bgColor =
     widget.isDark
-        ? const Color(0xFF041513)
+        ? const Color(0xFF0D1326)
         : Colors.white;
 
     final primaryTextColor =
@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final secondaryTextColor =
     widget.isDark
-        ? Colors.grey.shade600
+        ? const Color(0xFF7D8597)
         : Colors.grey.shade500;
 
     return Scaffold(
@@ -406,11 +406,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           : widget.isDark
 
-                          ? const Color(
-                          0xFF1E1E1E)
+                          ? const Color(0xFF1A2238)
 
-                          : const Color(
-                          0xFFF1F1F1),
+                          : const Color(0xFFF1F1F1),
 
                       onTap:
                           () => onButtonClick(button),
