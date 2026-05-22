@@ -1,4 +1,4 @@
-name: caluclator_app
+name: calculator_app
 description: "Modern Flutter Calculator Application"
 
 publish_to: 'none' # Prevents accidental publishing to pub.dev
