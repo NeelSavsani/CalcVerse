@@ -30,6 +30,12 @@ class _CalcButtonState
         widget.color ==
             const Color(0xFFF1F1F1);
 
+    // Press animation color
+    Color pressedColor =
+    isLightButton
+        ? Colors.grey.shade300
+        : widget.color.withOpacity(0.75);
+
     return GestureDetector(
 
       onTapDown: (_) {
@@ -81,7 +87,11 @@ class _CalcButtonState
 
           decoration: BoxDecoration(
 
-            color: widget.color,
+            // CHANGE COLOR ON PRESS
+            color:
+            isPressed
+                ? pressedColor
+                : widget.color,
 
             shape: BoxShape.circle,
 
