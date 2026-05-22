@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 class TrigoScreen extends StatefulWidget {
 
   final bool isDark;
+  final VoidCallback toggleTheme;
 
   const TrigoScreen({
     super.key,
     required this.isDark,
+    required this.toggleTheme,
   });
 
   @override
@@ -286,6 +288,25 @@ class _TrigoScreenState
             FontWeight.bold,
           ),
         ),
+
+        actions: [
+
+          // THEME BUTTON
+          IconButton(
+
+            onPressed:
+            widget.toggleTheme,
+
+            icon: Icon(
+
+              widget.isDark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+
+              color: primaryText,
+            ),
+          ),
+        ],
       ),
 
       body: SafeArea(

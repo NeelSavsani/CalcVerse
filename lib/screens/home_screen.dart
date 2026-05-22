@@ -122,6 +122,9 @@ class _HomeScreenState
 
               isDark:
               widget.isDark,
+
+              toggleTheme:
+              widget.toggleTheme,
             ),
       ),
     );
