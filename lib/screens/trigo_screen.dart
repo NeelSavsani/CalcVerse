@@ -44,6 +44,17 @@ class _TrigoScreenState
         coshCustom(x);
   }
 
+  // CLEAR FUNCTION
+  void clearAll() {
+
+    setState(() {
+
+      angleController.clear();
+
+      result = "—";
+    });
+  }
+
   void calculateTrig(String fn) {
 
     double? value =
@@ -309,59 +320,142 @@ class _TrigoScreenState
 
               const SizedBox(height: 10),
 
-              Container(
+              // INPUT + AC BUTTON
+              Row(
 
-                decoration: BoxDecoration(
+                children: [
 
-                  color: cardColor,
+                  // INPUT FIELD
+                  Expanded(
 
-                  borderRadius:
-                  BorderRadius.circular(
-                    18,
-                  ),
-                ),
+                    flex: 75,
 
-                child: TextField(
+                    child: Container(
 
-                  controller:
-                  angleController,
+                      decoration: BoxDecoration(
 
-                  keyboardType:
-                  const TextInputType
-                      .numberWithOptions(
-                    decimal: true,
-                  ),
+                        color: cardColor,
 
-                  style: TextStyle(
+                        borderRadius:
+                        BorderRadius.circular(
+                          18,
+                        ),
+                      ),
 
-                    fontSize: 20,
+                      child: TextField(
 
-                    color: primaryText,
-                  ),
+                        controller:
+                        angleController,
 
-                  decoration:
-                  InputDecoration(
+                        keyboardType:
+                        const TextInputType
+                            .numberWithOptions(
+                          decimal: true,
+                        ),
 
-                    hintText:
-                    "e.g. 45",
+                        style: TextStyle(
 
-                    hintStyle:
-                    TextStyle(
+                          fontSize: 20,
 
-                      color:
-                      secondaryText,
+                          color:
+                          primaryText,
+                        ),
+
+                        decoration:
+                        InputDecoration(
+
+                          hintText:
+                          "e.g. 45",
+
+                          hintStyle:
+                          TextStyle(
+
+                            color:
+                            secondaryText,
+                          ),
+
+                          border:
+                          InputBorder.none,
+
+                          contentPadding:
+                          const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 18,
+                          ),
+                        ),
+                      ),
                     ),
+                  ),
 
-                    border:
-                    InputBorder.none,
+                  const SizedBox(width: 12),
 
-                    contentPadding:
-                    const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 18,
+                  // AC BUTTON
+                  Expanded(
+
+                    flex: 20,
+
+                    child: GestureDetector(
+
+                      onTap: clearAll,
+
+                      child: Container(
+
+                        height: 60,
+
+                        alignment:
+                        Alignment.center,
+
+                        decoration:
+                        BoxDecoration(
+
+                          color:
+                          Colors.orange,
+
+                          borderRadius:
+                          BorderRadius.circular(
+                            18,
+                          ),
+
+                          boxShadow: [
+
+                            BoxShadow(
+
+                              color:
+                              Colors.black
+                                  .withOpacity(
+                                0.08,
+                              ),
+
+                              blurRadius: 6,
+
+                              offset:
+                              const Offset(
+                                0,
+                                3,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        child: const Text(
+
+                          "AC",
+
+                          style: TextStyle(
+
+                            fontSize: 18,
+
+                            fontWeight:
+                            FontWeight.bold,
+
+                            color:
+                            Colors.white,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
 
               const SizedBox(height: 24),
