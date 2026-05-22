@@ -53,6 +53,36 @@ class _HomeScreenState
     });
   }
 
+  bool isOperator(String x) {
+
+    return [
+      '%',
+      '÷',
+      '×',
+      '-',
+      '+',
+      '='
+    ].contains(x);
+  }
+
+  bool isNumberOrDot(String x) {
+
+    return [
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '00',
+      '.'
+    ].contains(x);
+  }
+
   void onButtonClick(String value) {
 
     setState(() {
@@ -81,9 +111,10 @@ class _HomeScreenState
 
           } else {
 
-            // Prevent error for incomplete expression
             String lastChar =
-            expression[expression.length - 1];
+            expression[
+            expression.length - 1
+            ];
 
             if (![
               '+',
@@ -137,13 +168,38 @@ class _HomeScreenState
       // NORMAL BUTTONS
       else {
 
-        // If user starts typing again after "="
+        // AFTER "=" BEHAVIOR
         if (isResultFinal) {
+
+          // If user presses number,
+          // start fresh calculation
+          if (isNumberOrDot(value)) {
+
+            expression = value;
+
+            result =
+            value == "."
+                ? "0"
+                : calculate(
+              expression,
+            );
+          }
+
+          // If user presses operator,
+          // continue calculation
+          else if (isOperator(value)) {
+
+            expression = result + value;
+          }
 
           isResultFinal = false;
         }
 
-        expression += value;
+        // NORMAL INPUT FLOW
+        else {
+
+          expression += value;
+        }
 
         String lastChar =
         expression[
@@ -167,18 +223,6 @@ class _HomeScreenState
         result = calculate(expression);
       }
     });
-  }
-
-  bool isOperator(String x) {
-
-    return [
-      '%',
-      '÷',
-      '×',
-      '-',
-      '+',
-      '='
-    ].contains(x);
   }
 
   @override
