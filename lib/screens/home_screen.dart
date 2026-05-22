@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/calc_button.dart';
 import '../utils/calculator_logic.dart';
+import 'history_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+
   final bool isDark;
   final VoidCallback toggleTheme;
 
@@ -13,16 +15,21 @@ class HomeScreen extends StatefulWidget {
   });
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<HomeScreen> createState() =>
+      _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState
+    extends State<HomeScreen> {
 
   String expression = "";
   String result = "0";
 
   // Tracks whether "=" was pressed
   bool isResultFinal = false;
+
+  // HISTORY LIST
+  List<String> history = [];
 
   final List<String> buttons = [
 
@@ -36,6 +43,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
     '00', '0', '.', '='
   ];
+
+  // CLEAR HISTORY
+  void clearHistory() {
+
+    setState(() {
+
+      history.clear();
+    });
+  }
 
   void onButtonClick(String value) {
 
@@ -77,7 +93,8 @@ class _HomeScreenState extends State<HomeScreen> {
               '%'
             ].contains(lastChar)) {
 
-              result = calculate(expression);
+              result =
+                  calculate(expression);
             }
           }
         }
@@ -91,7 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
         if (expression.isNotEmpty) {
 
           String lastChar =
-          expression[expression.length - 1];
+          expression[
+          expression.length - 1
+          ];
 
           // Prevent "=" on incomplete equation
           if (![
@@ -102,9 +121,15 @@ class _HomeScreenState extends State<HomeScreen> {
             '%'
           ].contains(lastChar)) {
 
-            result = calculate(expression);
+            result =
+                calculate(expression);
 
             isResultFinal = true;
+
+            // SAVE HISTORY
+            history.add(
+              "$expression = $result",
+            );
           }
         }
       }
@@ -121,7 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
         expression += value;
 
         String lastChar =
-        expression[expression.length - 1];
+        expression[
+        expression.length - 1
+        ];
 
         // Prevent live calculation
         // if expression ends with operator
@@ -175,7 +202,9 @@ class _HomeScreenState extends State<HomeScreen> {
         screenWidth * 0.025;
 
     double aspectRatio =
-    screenHeight < 700 ? 1.02 : 1.12;
+    screenHeight < 700
+        ? 1.02
+        : 1.12;
 
     // COLORS
     final bgColor =
@@ -196,6 +225,101 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
 
       backgroundColor: bgColor,
+
+      // SIDEBAR
+      drawer: Drawer(
+
+        backgroundColor:
+        widget.isDark
+            ? const Color(0xFF0D1326)
+            : Colors.white,
+
+        child: SafeArea(
+
+          child: Column(
+
+            children: [
+
+              const SizedBox(height: 30),
+
+              // TITLE
+              Text(
+
+                "Calculator",
+
+                style: TextStyle(
+
+                  fontSize: 28,
+
+                  fontWeight:
+                  FontWeight.bold,
+
+                  color:
+                  primaryTextColor,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // HISTORY BUTTON
+              ListTile(
+
+                leading: Icon(
+
+                  Icons.history,
+
+                  color:
+                  widget.isDark
+                      ? Colors.orange
+                      : Colors.deepOrange,
+                ),
+
+                title: Text(
+
+                  "History",
+
+                  style: TextStyle(
+
+                    fontSize: 18,
+
+                    fontWeight:
+                    FontWeight.w500,
+
+                    color:
+                    primaryTextColor,
+                  ),
+                ),
+
+                onTap: () {
+
+                  Navigator.pop(context);
+
+                  Navigator.push(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder: (_) =>
+                          HistoryScreen(
+
+                            history:
+                            history,
+
+                            onClearHistory:
+                            clearHistory,
+                          ),
+                    ),
+                  ).then((_) {
+
+                    setState(() {});
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
 
       body: SafeArea(
 
@@ -218,10 +342,29 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 children: [
 
-                  Icon(
-                    Icons.menu,
-                    color: primaryTextColor,
-                    size: 28,
+                  Builder(
+
+                    builder: (context) {
+
+                      return GestureDetector(
+
+                        onTap: () {
+
+                          Scaffold.of(context)
+                              .openDrawer();
+                        },
+
+                        child: Icon(
+
+                          Icons.menu,
+
+                          color:
+                          primaryTextColor,
+
+                          size: 28,
+                        ),
+                      );
+                    },
                   ),
 
                   IconButton(
@@ -235,7 +378,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ? Icons.light_mode
                           : Icons.dark_mode,
 
-                      color: primaryTextColor,
+                      color:
+                      primaryTextColor,
                     ),
                   ),
                 ],
@@ -265,12 +409,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                       style: TextStyle(
-
-                        // BEFORE "="
-                        // Equation large + white
-
-                        // AFTER "="
-                        // Equation small + grey
 
                         fontSize:
                         isResultFinal
@@ -315,12 +453,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
 
                       style: TextStyle(
-
-                        // BEFORE "="
-                        // Result small + grey
-
-                        // AFTER "="
-                        // Result large + white
 
                         fontSize:
                         isResultFinal
@@ -406,12 +538,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           : widget.isDark
 
-                          ? const Color(0xFF1A2238)
+                          ? const Color(
+                          0xFF1A2238)
 
-                          : const Color(0xFFF1F1F1),
+                          : const Color(
+                          0xFFF1F1F1),
 
                       onTap:
-                          () => onButtonClick(button),
+                          () => onButtonClick(
+                        button,
+                      ),
                     );
                   },
                 ),
