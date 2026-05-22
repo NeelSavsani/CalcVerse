@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CalcButton extends StatelessWidget {
+class CalcButton extends StatefulWidget {
 
   final String text;
   final VoidCallback onTap;
@@ -14,21 +14,74 @@ class CalcButton extends StatelessWidget {
   });
 
   @override
+  State<CalcButton> createState() =>
+      _CalcButtonState();
+}
+
+class _CalcButtonState
+    extends State<CalcButton> {
+
+  bool isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
+
+    bool isLightButton =
+        widget.color ==
+            const Color(0xFFF1F1F1);
 
     return GestureDetector(
 
-      onTap: onTap,
+      onTapDown: (_) {
+
+        setState(() {
+
+          isPressed = true;
+        });
+      },
+
+      onTapUp: (_) {
+
+        setState(() {
+
+          isPressed = false;
+        });
+
+        widget.onTap();
+      },
+
+      onTapCancel: () {
+
+        setState(() {
+
+          isPressed = false;
+        });
+      },
 
       child: AspectRatio(
 
         aspectRatio: 1,
 
-        child: Container(
+        child: AnimatedContainer(
+
+          duration:
+          const Duration(
+            milliseconds: 80,
+          ),
+
+          curve: Curves.easeOut,
+
+          transformAlignment:
+          Alignment.center,
+
+          transform: Matrix4.identity()
+            ..scale(
+              isPressed ? 0.88 : 1.0,
+            ),
 
           decoration: BoxDecoration(
 
-            color: color,
+            color: widget.color,
 
             shape: BoxShape.circle,
 
@@ -36,30 +89,50 @@ class CalcButton extends StatelessWidget {
 
               BoxShadow(
 
-                color: Colors.black.withOpacity(0.12),
+                color:
+                Colors.black.withOpacity(
+                  isPressed ? 0.05 : 0.12,
+                ),
 
-                blurRadius: 8,
+                blurRadius:
+                isPressed ? 3 : 8,
 
-                offset: const Offset(0, 4),
+                offset: Offset(
+                  0,
+                  isPressed ? 2 : 4,
+                ),
               ),
             ],
           ),
 
           child: Center(
 
-            child: Text(
+            child: AnimatedScale(
 
-              text,
+              duration:
+              const Duration(
+                milliseconds: 80,
+              ),
 
-              style: TextStyle(
+              scale:
+              isPressed ? 0.92 : 1.0,
 
-                fontSize: 28,
+              child: Text(
 
-                fontWeight: FontWeight.w500,
+                widget.text,
 
-                color: color == const Color(0xFFF1F1F1)
-                    ? Colors.black
-                    : Colors.white,
+                style: TextStyle(
+
+                  fontSize: 28,
+
+                  fontWeight:
+                  FontWeight.w500,
+
+                  color:
+                  isLightButton
+                      ? Colors.black
+                      : Colors.white,
+                ),
               ),
             ),
           ),
