@@ -83,6 +83,29 @@ class _HomeScreenState
     ].contains(x);
   }
 
+  void openHistoryScreen() {
+
+    Navigator.push(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder: (_) =>
+            HistoryScreen(
+
+              history: history,
+
+              onClearHistory:
+              clearHistory,
+            ),
+      ),
+    ).then((_) {
+
+      setState(() {});
+    });
+  }
+
   void onButtonClick(String value) {
 
     setState(() {
@@ -189,7 +212,8 @@ class _HomeScreenState
           // continue calculation
           else if (isOperator(value)) {
 
-            expression = result + value;
+            expression =
+                result + value;
           }
 
           isResultFinal = false;
@@ -240,7 +264,7 @@ class _HomeScreenState
         screenWidth * 0.05;
 
     double topGap =
-        screenHeight * 0.06;
+        screenHeight * 0.04;
 
     double buttonSpacing =
         screenWidth * 0.025;
@@ -270,101 +294,6 @@ class _HomeScreenState
 
       backgroundColor: bgColor,
 
-      // SIDEBAR
-      drawer: Drawer(
-
-        backgroundColor:
-        widget.isDark
-            ? const Color(0xFF0D1326)
-            : Colors.white,
-
-        child: SafeArea(
-
-          child: Column(
-
-            children: [
-
-              const SizedBox(height: 30),
-
-              // TITLE
-              Text(
-
-                "Calculator",
-
-                style: TextStyle(
-
-                  fontSize: 28,
-
-                  fontWeight:
-                  FontWeight.bold,
-
-                  color:
-                  primaryTextColor,
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // HISTORY BUTTON
-              ListTile(
-
-                leading: Icon(
-
-                  Icons.history,
-
-                  color:
-                  widget.isDark
-                      ? Colors.orange
-                      : Colors.deepOrange,
-                ),
-
-                title: Text(
-
-                  "History",
-
-                  style: TextStyle(
-
-                    fontSize: 18,
-
-                    fontWeight:
-                    FontWeight.w500,
-
-                    color:
-                    primaryTextColor,
-                  ),
-                ),
-
-                onTap: () {
-
-                  Navigator.pop(context);
-
-                  Navigator.push(
-
-                    context,
-
-                    MaterialPageRoute(
-
-                      builder: (_) =>
-                          HistoryScreen(
-
-                            history:
-                            history,
-
-                            onClearHistory:
-                            clearHistory,
-                          ),
-                    ),
-                  ).then((_) {
-
-                    setState(() {});
-                  });
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-
       body: SafeArea(
 
         child: Padding(
@@ -382,34 +311,9 @@ class _HomeScreenState
               Row(
 
                 mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+                MainAxisAlignment.end,
 
                 children: [
-
-                  Builder(
-
-                    builder: (context) {
-
-                      return GestureDetector(
-
-                        onTap: () {
-
-                          Scaffold.of(context)
-                              .openDrawer();
-                        },
-
-                        child: Icon(
-
-                          Icons.menu,
-
-                          color:
-                          primaryTextColor,
-
-                          size: 28,
-                        ),
-                      );
-                    },
-                  ),
 
                   IconButton(
 
@@ -533,7 +437,74 @@ class _HomeScreenState
 
               SizedBox(
                 height:
-                screenHeight * 0.03,
+                screenHeight * 0.02,
+              ),
+
+              // HISTORY BUTTON
+              Align(
+
+                alignment:
+                Alignment.centerLeft,
+
+                child: GestureDetector(
+
+                  onTap:
+                  openHistoryScreen,
+
+                  child: Container(
+
+                    padding:
+                    const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+
+                    decoration: BoxDecoration(
+
+                      color:
+                      widget.isDark
+                          ? const Color(
+                          0xFF1A2238)
+                          : const Color(
+                          0xFFF1F1F1),
+
+                      borderRadius:
+                      BorderRadius.circular(
+                        18,
+                      ),
+                    ),
+
+                    child: Row(
+
+                      mainAxisSize:
+                      MainAxisSize.min,
+
+                      children: [
+
+                        Icon(
+
+                          Icons.history,
+
+                          size: 20,
+
+                          color:
+                          widget.isDark
+                              ? Colors.orange
+                              : Colors.deepOrange,
+                        ),
+
+
+
+
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(
+                height:
+                screenHeight * 0.02,
               ),
 
               // BUTTONS
@@ -548,7 +519,8 @@ class _HomeScreenState
 
                   padding: EdgeInsets.zero,
 
-                  itemCount: buttons.length,
+                  itemCount:
+                  buttons.length,
 
                   gridDelegate:
                   SliverGridDelegateWithFixedCrossAxisCount(
