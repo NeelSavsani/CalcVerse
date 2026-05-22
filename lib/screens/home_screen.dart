@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../widgets/calc_button.dart';
 import '../utils/calculator_logic.dart';
 import 'history_screen.dart';
+import 'trigo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -104,6 +105,26 @@ class _HomeScreenState
 
       setState(() {});
     });
+  }
+
+  void openTrigoScreen() {
+
+    Navigator.pop(context);
+
+    Navigator.push(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder: (_) =>
+            TrigoScreen(
+
+              isDark:
+              widget.isDark,
+            ),
+      ),
+    );
   }
 
   void onButtonClick(String value) {
@@ -294,6 +315,88 @@ class _HomeScreenState
 
       backgroundColor: bgColor,
 
+      // SIDEBAR
+      drawer: Drawer(
+
+        backgroundColor:
+        widget.isDark
+            ? const Color(0xFF0D1326)
+            : Colors.white,
+
+        child: SafeArea(
+
+          child: Column(
+
+            crossAxisAlignment:
+            CrossAxisAlignment.start,
+
+            children: [
+
+              const SizedBox(height: 40),
+
+              Padding(
+
+                padding:
+                const EdgeInsets.symmetric(
+                  horizontal: 24,
+                ),
+
+                child: Text(
+
+                  "CalcVerse",
+
+                  style: TextStyle(
+
+                    fontSize: 28,
+
+                    fontWeight:
+                    FontWeight.bold,
+
+                    color:
+                    primaryTextColor,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // TRIGONOMETRY BUTTON
+              ListTile(
+
+                leading: Icon(
+
+                  Icons.functions,
+
+                  color:
+                  widget.isDark
+                      ? Colors.orange
+                      : Colors.deepOrange,
+                ),
+
+                title: Text(
+
+                  "Trigonometry",
+
+                  style: TextStyle(
+
+                    fontSize: 18,
+
+                    fontWeight:
+                    FontWeight.w500,
+
+                    color:
+                    primaryTextColor,
+                  ),
+                ),
+
+                onTap:
+                openTrigoScreen,
+              ),
+            ],
+          ),
+        ),
+      ),
+
       body: SafeArea(
 
         child: Padding(
@@ -311,9 +414,34 @@ class _HomeScreenState
               Row(
 
                 mainAxisAlignment:
-                MainAxisAlignment.end,
+                MainAxisAlignment.spaceBetween,
 
                 children: [
+
+                  Builder(
+
+                    builder: (context) {
+
+                      return GestureDetector(
+
+                        onTap: () {
+
+                          Scaffold.of(context)
+                              .openDrawer();
+                        },
+
+                        child: Icon(
+
+                          Icons.menu,
+
+                          color:
+                          primaryTextColor,
+
+                          size: 28,
+                        ),
+                      );
+                    },
+                  ),
 
                   IconButton(
 
@@ -492,10 +620,6 @@ class _HomeScreenState
                               ? Colors.orange
                               : Colors.deepOrange,
                         ),
-
-
-
-
                       ],
                     ),
                   ),
