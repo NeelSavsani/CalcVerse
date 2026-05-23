@@ -24,6 +24,10 @@ class AppDrawer extends StatelessWidget {
   static const String
   dataRoute = '/data';
 
+  static const String
+  temperatureRoute =
+      '/temperature';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -298,6 +302,22 @@ class AppDrawer extends StatelessWidget {
 
                 routeName:
                 dataRoute,
+              ),
+
+              // TEMPERATURE CONVERTER
+
+              drawerTile(
+
+                context: context,
+
+                icon:
+                Icons.thermostat,
+
+                title:
+                'Temperature Converter',
+
+                routeName:
+                temperatureRoute,
               ),
             ],
           ),

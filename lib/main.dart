@@ -5,6 +5,7 @@ import 'screens/emi_screen.dart';
 import 'screens/geo_screen.dart';
 import 'screens/gst_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/temperature_screen.dart';
 import 'screens/trigo_screen.dart';
 
 import 'widgets/app_drawer.dart';
@@ -189,6 +190,18 @@ class _MyAppState
         AppDrawer.dataRoute:
 
             (_) => DataScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // TEMPERATURE CONVERTER
+
+        AppDrawer.temperatureRoute:
+
+            (_) => TemperatureScreen(
 
           isDark: isDark,
 
