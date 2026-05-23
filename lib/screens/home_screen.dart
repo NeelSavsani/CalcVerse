@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import '../widgets/calc_button.dart';
+
 import '../utils/calculator_logic.dart';
+import '../widgets/calc_button.dart';
+
+import 'emi_screen.dart';
+import 'geo_screen.dart';
 import 'history_screen.dart';
 import 'trigo_screen.dart';
-import 'geo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -24,24 +27,49 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState
     extends State<HomeScreen> {
 
-  String expression = "";
-  String result = "0";
+  static const String backspace =
+      '\u232b';
+
+  static const String divide =
+      '\u00f7';
+
+  static const String multiply =
+      '\u00d7';
+
+  String expression = '';
+
+  String result = '0';
 
   bool isResultFinal = false;
 
-  List<String> history = [];
+  final List<String> history = [];
 
-  final List<String> buttons = [
+  final List<String> buttons = const [
 
-    'AC', '⌫', '%', '÷',
+    'AC',
+    backspace,
+    '%',
+    divide,
 
-    '7', '8', '9', '×',
+    '7',
+    '8',
+    '9',
+    multiply,
 
-    '4', '5', '6', '-',
+    '4',
+    '5',
+    '6',
+    '-',
 
-    '1', '2', '3', '+',
+    '1',
+    '2',
+    '3',
+    '+',
 
-    '00', '0', '.', '='
+    '00',
+    '0',
+    '.',
+    '=',
   ];
 
   void clearHistory() {
@@ -52,21 +80,24 @@ class _HomeScreenState
     });
   }
 
-  bool isOperator(String x) {
+  bool isOperator(String value) {
 
     return [
       '%',
-      '÷',
-      '×',
+      divide,
+      multiply,
       '-',
       '+',
       '='
-    ].contains(x);
+    ].contains(value);
   }
 
-  bool isNumberOrDot(String x) {
+  bool isNumberOrDot(
+      String value,
+      ) {
 
     return [
+
       '0',
       '1',
       '2',
@@ -79,7 +110,31 @@ class _HomeScreenState
       '9',
       '00',
       '.'
-    ].contains(x);
+
+    ].contains(value);
+  }
+
+  bool endsWithOperator(
+      String value,
+      ) {
+
+    if (value.isEmpty) {
+
+      return false;
+    }
+
+    final String lastChar =
+    value[value.length - 1];
+
+    return [
+
+      '+',
+      '-',
+      multiply,
+      divide,
+      '%'
+
+    ].contains(lastChar);
   }
 
   void openHistoryScreen() {
@@ -102,18 +157,87 @@ class _HomeScreenState
     );
   }
 
-  void onButtonClick(String value) {
+  void openTrigonometry() {
+
+    Navigator.pushReplacement(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder: (_) =>
+            TrigoScreen(
+
+              isDark:
+              widget.isDark,
+
+              toggleTheme:
+              widget.toggleTheme,
+            ),
+      ),
+    );
+  }
+
+  void openGeometry() {
+
+    Navigator.pushReplacement(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder: (_) =>
+            GeoScreen(
+
+              isDark:
+              widget.isDark,
+
+              toggleTheme:
+              widget.toggleTheme,
+            ),
+      ),
+    );
+  }
+
+  void openEmiCalculator() {
+
+    Navigator.pushReplacement(
+
+      context,
+
+      MaterialPageRoute(
+
+        builder: (_) =>
+            EmiScreen(
+
+              isDark:
+              widget.isDark,
+
+              toggleTheme:
+              widget.toggleTheme,
+            ),
+      ),
+    );
+  }
+
+  void onButtonClick(
+      String value,
+      ) {
 
     setState(() {
 
       if (value == 'AC') {
 
-        expression = "";
-        result = "0";
+        expression = '';
+
+        result = '0';
+
         isResultFinal = false;
+
+        return;
       }
 
-      else if (value == '⌫') {
+      if (value == backspace) {
 
         if (expression.isNotEmpty) {
 
@@ -123,150 +247,172 @@ class _HomeScreenState
                 expression.length - 1,
               );
 
-          if (expression.isEmpty) {
+          result =
+          expression.isEmpty ||
+              endsWithOperator(
+                expression,
+              )
+              ? '0'
+              : calculate(
+            expression,
+          );
+        }
 
-            result = "0";
+        isResultFinal = false;
 
-          } else {
+        return;
+      }
 
-            String lastChar =
-            expression[
-            expression.length - 1
-            ];
+      if (value == '=') {
 
-            if (![
-              '+',
-              '-',
-              '×',
-              '÷',
-              '%'
-            ].contains(lastChar)) {
+        if (expression.isNotEmpty &&
+            !endsWithOperator(
+              expression,
+            )) {
 
-              result =
-                  calculate(expression);
-            }
-          }
+          result =
+              calculate(
+                expression,
+              );
+
+          isResultFinal = true;
+
+          history.add(
+            '$expression = $result',
+          );
+        }
+
+        return;
+      }
+
+      if (isResultFinal) {
+
+        if (isNumberOrDot(value)) {
+
+          expression = value;
+
+          result =
+          value == '.'
+              ? '0'
+              : calculate(
+            expression,
+          );
+        }
+
+        else if (isOperator(value)) {
+
+          expression =
+              result + value;
         }
 
         isResultFinal = false;
       }
 
-      else if (value == '=') {
-
-        if (expression.isNotEmpty) {
-
-          String lastChar =
-          expression[
-          expression.length - 1
-          ];
-
-          if (![
-            '+',
-            '-',
-            '×',
-            '÷',
-            '%'
-          ].contains(lastChar)) {
-
-            result =
-                calculate(expression);
-
-            isResultFinal = true;
-
-            history.add(
-              "$expression = $result",
-            );
-          }
-        }
-      }
-
       else {
 
-        if (isResultFinal) {
+        expression += value;
+      }
 
-          if (isNumberOrDot(value)) {
-
-            expression = value;
-
-            result =
-            value == "."
-                ? "0"
-                : calculate(
-              expression,
-            );
-          }
-
-          else if (isOperator(value)) {
-
-            expression =
-                result + value;
-          }
-
-          isResultFinal = false;
-        }
-
-        else {
-
-          expression += value;
-        }
-
-        String lastChar =
-        expression[
-        expression.length - 1
-        ];
-
-        if ([
-          '+',
-          '-',
-          '×',
-          '÷',
-          '%'
-        ].contains(lastChar)) {
-
-          return;
-        }
+      if (!endsWithOperator(
+        expression,
+      )) {
 
         result =
-            calculate(expression);
+            calculate(
+              expression,
+            );
       }
     });
+  }
+
+  Widget buildDrawerItem({
+
+    required IconData icon,
+
+    required String title,
+
+    required Color primaryTextColor,
+
+    required VoidCallback onTap,
+  }) {
+
+    return ListTile(
+
+      leading: Icon(
+
+        icon,
+
+        color:
+        Theme.of(context)
+            .brightness ==
+            Brightness.dark
+            ? Colors.orange
+            : Colors.deepOrange,
+      ),
+
+      title: Text(
+
+        title,
+
+        style: TextStyle(
+
+          fontSize: 18,
+
+          fontWeight:
+          FontWeight.w500,
+
+          color:
+          primaryTextColor,
+        ),
+      ),
+
+      onTap: onTap,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
 
-    double screenWidth =
-        MediaQuery.of(context).size.width;
+    final bool isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
 
-    double screenHeight =
-        MediaQuery.of(context).size.height;
+    final double screenWidth =
+        MediaQuery.of(context)
+            .size
+            .width;
 
-    double horizontalPadding =
+    final double screenHeight =
+        MediaQuery.of(context)
+            .size
+            .height;
+
+    final double horizontalPadding =
         screenWidth * 0.05;
 
-    double topGap =
+    final double topGap =
         screenHeight * 0.04;
 
-    double buttonSpacing =
+    final double buttonSpacing =
         screenWidth * 0.025;
 
-    double aspectRatio =
+    final double aspectRatio =
     screenHeight < 700
         ? 1.02
         : 1.12;
 
-    final bgColor =
-    widget.isDark
+    final Color bgColor =
+    isDark
         ? const Color(0xFF0D1326)
         : Colors.white;
 
-    final primaryTextColor =
-    widget.isDark
+    final Color primaryTextColor =
+    isDark
         ? Colors.white
         : Colors.black;
 
-    final secondaryTextColor =
-    widget.isDark
+    final Color secondaryTextColor =
+    isDark
         ? const Color(0xFF7D8597)
         : Colors.grey.shade500;
 
@@ -274,12 +420,11 @@ class _HomeScreenState
 
       backgroundColor: bgColor,
 
+      // DRAWER
+
       drawer: Drawer(
 
-        backgroundColor:
-        widget.isDark
-            ? const Color(0xFF0D1326)
-            : Colors.white,
+        backgroundColor: bgColor,
 
         child: SafeArea(
 
@@ -301,7 +446,7 @@ class _HomeScreenState
 
                 child: Text(
 
-                  "CalcVerse",
+                  'CalcVerse',
 
                   style: TextStyle(
 
@@ -318,26 +463,28 @@ class _HomeScreenState
 
               const SizedBox(height: 40),
 
-              // BASIC CALCULATOR
+              // ACTIVE SCREEN
+
               Container(
 
                 color:
-                widget.isDark
+                isDark
                     ? const Color(0xFF1A2238)
                     : Colors.grey.shade200,
 
                 child: ListTile(
 
-                  leading: Icon(
+                  leading: const Icon(
 
                     Icons.calculate,
 
-                    color: Colors.orange,
+                    color:
+                    Colors.orange,
                   ),
 
                   title: Text(
 
-                    "Basic Calculator",
+                    'Basic Calculator',
 
                     style: TextStyle(
 
@@ -353,106 +500,46 @@ class _HomeScreenState
                 ),
               ),
 
-              // TRIGONOMETRY
-              ListTile(
+              buildDrawerItem(
 
-                leading: Icon(
+                icon: Icons.functions,
 
-                  Icons.functions,
+                title: 'Trigonometry',
 
-                  color:
-                  widget.isDark
-                      ? Colors.orange
-                      : Colors.deepOrange,
-                ),
+                primaryTextColor:
+                primaryTextColor,
 
-                title: Text(
-
-                  "Trigonometry",
-
-                  style: TextStyle(
-
-                    fontSize: 18,
-
-                    fontWeight:
-                    FontWeight.w500,
-
-                    color:
-                    primaryTextColor,
-                  ),
-                ),
-
-                onTap: () {
-
-                  Navigator.pushReplacement(
-
-                    context,
-
-                    MaterialPageRoute(
-
-                      builder: (_) =>
-                          TrigoScreen(
-
-                            isDark:
-                            widget.isDark,
-
-                            toggleTheme:
-                            widget.toggleTheme,
-                          ),
-                    ),
-                  );
-                },
+                onTap:
+                openTrigonometry,
               ),
 
-              // GEOMETRY
-              ListTile(
+              buildDrawerItem(
 
-                leading: Icon(
+                icon:
+                Icons.hexagon_outlined,
 
-                  Icons.hexagon_outlined,
+                title: 'Geometry',
 
-                  color:
-                  widget.isDark
-                      ? Colors.orange
-                      : Colors.deepOrange,
-                ),
+                primaryTextColor:
+                primaryTextColor,
 
-                title: Text(
+                onTap:
+                openGeometry,
+              ),
 
-                  "Geometry",
+              buildDrawerItem(
 
-                  style: TextStyle(
+                icon:
+                Icons.currency_rupee,
 
-                    fontSize: 18,
+                title:
+                'EMI Calculator',
 
-                    fontWeight:
-                    FontWeight.w500,
+                primaryTextColor:
+                primaryTextColor,
 
-                    color:
-                    primaryTextColor,
-                  ),
-                ),
-
-                onTap: () {
-
-                  Navigator.pushReplacement(
-
-                    context,
-
-                    MaterialPageRoute(
-
-                      builder: (_) =>
-                          GeoScreen(
-
-                            isDark:
-                            widget.isDark,
-
-                            toggleTheme:
-                            widget.toggleTheme,
-                          ),
-                    ),
-                  );
-                },
+                onTap:
+                openEmiCalculator,
               ),
             ],
           ),
@@ -463,8 +550,12 @@ class _HomeScreenState
 
         child: Padding(
 
-          padding: EdgeInsets.symmetric(
-            horizontal: horizontalPadding,
+          padding:
+          EdgeInsets.symmetric(
+
+            horizontal:
+            horizontalPadding,
+
             vertical: 20,
           ),
 
@@ -472,10 +563,13 @@ class _HomeScreenState
 
             children: [
 
+              // TOP BAR
+
               Row(
 
                 mainAxisAlignment:
-                MainAxisAlignment.spaceBetween,
+                MainAxisAlignment
+                    .spaceBetween,
 
                 children: [
 
@@ -483,15 +577,16 @@ class _HomeScreenState
 
                     builder: (context) {
 
-                      return GestureDetector(
+                      return IconButton(
 
-                        onTap: () {
+                        onPressed: () {
 
-                          Scaffold.of(context)
-                              .openDrawer();
+                          Scaffold.of(
+                            context,
+                          ).openDrawer();
                         },
 
-                        child: Icon(
+                        icon: Icon(
 
                           Icons.menu,
 
@@ -504,14 +599,33 @@ class _HomeScreenState
                     },
                   ),
 
+                  // THEME BUTTON
+
                   IconButton(
 
-                    onPressed:
-                    widget.toggleTheme,
+                    onPressed: () {
+
+                      widget.toggleTheme();
+
+                      Future.delayed(
+
+                        const Duration(
+                          milliseconds: 50,
+                        ),
+
+                            () {
+
+                          if (mounted) {
+
+                            setState(() {});
+                          }
+                        },
+                      );
+                    },
 
                     icon: Icon(
 
-                      widget.isDark
+                      isDark
                           ? Icons.light_mode
                           : Icons.dark_mode,
 
@@ -522,7 +636,11 @@ class _HomeScreenState
                 ],
               ),
 
-              SizedBox(height: topGap),
+              SizedBox(
+                height: topGap,
+              ),
+
+              // DISPLAY
 
               Expanded(
 
@@ -532,7 +650,8 @@ class _HomeScreenState
                   MainAxisAlignment.end,
 
                   crossAxisAlignment:
-                  CrossAxisAlignment.stretch,
+                  CrossAxisAlignment
+                      .stretch,
 
                   children: [
 
@@ -564,20 +683,23 @@ class _HomeScreenState
                       child: Text(
 
                         expression.isEmpty
-                            ? "0"
+                            ? '0'
                             : expression,
 
                         maxLines: 2,
 
                         overflow:
-                        TextOverflow.ellipsis,
+                        TextOverflow
+                            .ellipsis,
 
                         textAlign:
                         TextAlign.right,
                       ),
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(
+                      height: 10,
+                    ),
 
                     AnimatedDefaultTextStyle(
 
@@ -611,7 +733,8 @@ class _HomeScreenState
                         maxLines: 1,
 
                         overflow:
-                        TextOverflow.ellipsis,
+                        TextOverflow
+                            .ellipsis,
 
                         textAlign:
                         TextAlign.right,
@@ -625,6 +748,8 @@ class _HomeScreenState
                 height:
                 screenHeight * 0.02,
               ),
+
+              // HISTORY BUTTON
 
               Align(
 
@@ -640,14 +765,17 @@ class _HomeScreenState
 
                     padding:
                     const EdgeInsets.symmetric(
+
                       horizontal: 10,
+
                       vertical: 10,
                     ),
 
-                    decoration: BoxDecoration(
+                    decoration:
+                    BoxDecoration(
 
                       color:
-                      widget.isDark
+                      isDark
                           ? const Color(
                           0xFF1A2238)
                           : const Color(
@@ -659,25 +787,16 @@ class _HomeScreenState
                       ),
                     ),
 
-                    child: Row(
+                    child: Icon(
 
-                      mainAxisSize:
-                      MainAxisSize.min,
+                      Icons.history,
 
-                      children: [
+                      size: 20,
 
-                        Icon(
-
-                          Icons.history,
-
-                          size: 20,
-
-                          color:
-                          widget.isDark
-                              ? Colors.orange
-                              : Colors.deepOrange,
-                        ),
-                      ],
+                      color:
+                      isDark
+                          ? Colors.orange
+                          : Colors.deepOrange,
                     ),
                   ),
                 ),
@@ -688,6 +807,8 @@ class _HomeScreenState
                 screenHeight * 0.02,
               ),
 
+              // BUTTON GRID
+
               Expanded(
 
                 flex: 2,
@@ -697,7 +818,8 @@ class _HomeScreenState
                   physics:
                   const NeverScrollableScrollPhysics(),
 
-                  padding: EdgeInsets.zero,
+                  padding:
+                  EdgeInsets.zero,
 
                   itemCount:
                   buttons.length,
@@ -720,7 +842,7 @@ class _HomeScreenState
                   itemBuilder:
                       (context, index) {
 
-                    final button =
+                    final String button =
                     buttons[index];
 
                     return CalcButton(
@@ -732,7 +854,7 @@ class _HomeScreenState
 
                           ? Colors.orange
 
-                          : widget.isDark
+                          : isDark
 
                           ? const Color(
                           0xFF1A2238)
@@ -740,10 +862,10 @@ class _HomeScreenState
                           : const Color(
                           0xFFF1F1F1),
 
-                      onTap:
-                          () => onButtonClick(
-                        button,
-                      ),
+                      onTap: () =>
+                          onButtonClick(
+                            button,
+                          ),
                     );
                   },
                 ),

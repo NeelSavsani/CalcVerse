@@ -2,18 +2,17 @@ import 'package:math_expressions/math_expressions.dart';
 
 String calculate(String expression) {
   try {
-    expression = expression.replaceAll('×', '*');
-    expression = expression.replaceAll('÷', '/');
+    expression = expression.replaceAll('\u00d7', '*');
+    expression = expression.replaceAll('\u00f7', '/');
 
-    Parser p = Parser();
-    Expression exp = p.parse(expression);
+    final Parser parser = Parser();
+    final Expression parsedExpression = parser.parse(expression);
+    final ContextModel contextModel = ContextModel();
+    final double value =
+        parsedExpression.evaluate(EvaluationType.REAL, contextModel);
 
-    ContextModel cm = ContextModel();
-
-    double eval = exp.evaluate(EvaluationType.REAL, cm);
-
-    return eval.toString();
-  } catch (e) {
-    return "Error";
+    return value.toString();
+  } catch (_) {
+    return 'Error';
   }
 }
