@@ -9,6 +9,7 @@ import 'screens/temperature_screen.dart';
 import 'screens/trigo_screen.dart';
 import 'screens/uni_screen.dart';
 import 'widgets/app_drawer.dart';
+import 'screens/age_screen.dart';
 
 void main() {
 
@@ -213,6 +214,17 @@ class _MyAppState
         AppDrawer.unitRoute:
 
             (_) => UniScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        //AGE CALCULATOR
+        AppDrawer.ageRoute:
+
+            (_) => AgeScreen(
 
           isDark: isDark,
 

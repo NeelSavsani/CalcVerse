@@ -31,6 +31,9 @@ class AppDrawer extends StatelessWidget {
   static const String
   unitRoute = '/unit';
 
+  static const String
+  ageRoute = '/age';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -335,6 +338,20 @@ class AppDrawer extends StatelessWidget {
 
                 routeName:
                 unitRoute,
+              ),
+
+              drawerTile(
+
+                context: context,
+
+                icon:
+                Icons.cake,
+
+                title:
+                'Age Calculator',
+
+                routeName:
+                ageRoute,
               ),
             ],
           ),
