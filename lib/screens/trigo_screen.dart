@@ -1,5 +1,7 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'home_screen.dart';
+import 'geo_screen.dart';
 
 class TrigoScreen extends StatefulWidget {
 
@@ -19,6 +21,10 @@ class TrigoScreen extends StatefulWidget {
 
 class _TrigoScreenState
     extends State<TrigoScreen> {
+
+  final GlobalKey<ScaffoldState>
+  scaffoldKey =
+  GlobalKey<ScaffoldState>();
 
   final TextEditingController
   angleController =
@@ -47,6 +53,7 @@ class _TrigoScreenState
   }
 
   // CLEAR FUNCTION
+
   void clearAll() {
 
     setState(() {
@@ -241,29 +248,200 @@ class _TrigoScreenState
   @override
   Widget build(BuildContext context) {
 
+    final isDark =
+        Theme.of(context).brightness ==
+            Brightness.dark;
+
     final bgColor =
-    widget.isDark
+    isDark
         ? const Color(0xFF0D1326)
         : Colors.white;
 
     final cardColor =
-    widget.isDark
+    isDark
         ? const Color(0xFF1A2238)
         : const Color(0xFFF4F4F4);
 
     final primaryText =
-    widget.isDark
+    isDark
         ? Colors.white
         : Colors.black;
 
     final secondaryText =
-    widget.isDark
+    isDark
         ? Colors.grey.shade400
         : Colors.grey.shade700;
 
     return Scaffold(
 
+      key: scaffoldKey,
+
       backgroundColor: bgColor,
+
+      // DRAWER
+
+      drawer: Drawer(
+
+        backgroundColor:
+        isDark
+            ? const Color(0xFF0D1326)
+            : Colors.white,
+
+        child: SafeArea(
+
+          child: Column(
+
+            crossAxisAlignment:
+            CrossAxisAlignment.start,
+
+            children: [
+
+              const SizedBox(height: 40),
+
+              Padding(
+
+                padding:
+                const EdgeInsets.symmetric(
+                  horizontal: 24,
+                ),
+
+                child: Text(
+
+                  "CalcVerse",
+
+                  style: TextStyle(
+
+                    fontSize: 28,
+
+                    fontWeight:
+                    FontWeight.bold,
+
+                    color:
+                    primaryText,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // BASIC CALCULATOR
+
+              ListTile(
+
+                leading: const Icon(
+                  Icons.calculate,
+                  color: Colors.orange,
+                ),
+
+                title: Text(
+
+                  "Basic Calculator",
+
+                  style: TextStyle(
+
+                    color: primaryText,
+
+                    fontWeight:
+                    FontWeight.w600,
+                  ),
+                ),
+
+                onTap: () {
+
+                  Navigator.pushReplacement(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder: (_) =>
+                          HomeScreen(
+
+                            isDark: isDark,
+
+                            toggleTheme:
+                            widget.toggleTheme,
+                          ),
+                    ),
+                  );
+                },
+              ),
+
+              // ACTIVE TRIGONOMETRY
+
+              Container(
+
+                color:
+                isDark
+                    ? const Color(0xFF1A2238)
+                    : Colors.grey.shade200,
+
+                child: ListTile(
+
+                  leading: const Icon(
+                    Icons.functions,
+                    color: Colors.orange,
+                  ),
+
+                  title: Text(
+
+                    "Trigonometry",
+
+                    style: TextStyle(
+
+                      color: primaryText,
+
+                      fontWeight:
+                      FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+
+              // GEOMETRY
+
+              ListTile(
+
+                leading: const Icon(
+                  Icons.hexagon_outlined,
+                  color: Colors.orange,
+                ),
+
+                title: Text(
+
+                  "Geometry",
+
+                  style: TextStyle(
+                    color: primaryText,
+                  ),
+                ),
+
+                onTap: () {
+
+                  Navigator.pushReplacement(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder: (_) =>
+                          GeoScreen(
+
+                            isDark: isDark,
+
+                            toggleTheme:
+                            widget.toggleTheme,
+                          ),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+
+      // APP BAR
 
       appBar: AppBar(
 
@@ -271,43 +449,82 @@ class _TrigoScreenState
 
         backgroundColor: bgColor,
 
-        iconTheme: IconThemeData(
+        automaticallyImplyLeading: false,
 
-          color: primaryText,
-        ),
+        title: Row(
 
-        title: Text(
+          mainAxisAlignment:
+          MainAxisAlignment.spaceBetween,
 
-          "Trigonometry",
+          children: [
 
-          style: TextStyle(
+            // MENU BUTTON
 
-            color: primaryText,
+            GestureDetector(
 
-            fontWeight:
-            FontWeight.bold,
-          ),
-        ),
+              onTap: () {
 
-        actions: [
+                scaffoldKey.currentState
+                    ?.openDrawer();
+              },
 
-          // THEME BUTTON
-          IconButton(
+              child: Icon(
 
-            onPressed:
-            widget.toggleTheme,
+                Icons.menu,
 
-            icon: Icon(
-
-              widget.isDark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
-
-              color: primaryText,
+                color: primaryText,
+              ),
             ),
-          ),
-        ],
+
+            Text(
+
+              "Trigonometry",
+
+              style: TextStyle(
+
+                color: primaryText,
+
+                fontWeight:
+                FontWeight.bold,
+              ),
+            ),
+
+            // THEME BUTTON
+
+            IconButton(
+
+              onPressed: () {
+
+                widget.toggleTheme();
+
+                Future.delayed(
+                  const Duration(
+                    milliseconds: 50,
+                  ),
+                      () {
+
+                    if (mounted) {
+
+                      setState(() {});
+                    }
+                  },
+                );
+              },
+
+              icon: Icon(
+
+                isDark
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+
+                color: primaryText,
+              ),
+            ),
+          ],
+        ),
       ),
+
+      // BODY
 
       body: SafeArea(
 
@@ -324,6 +541,7 @@ class _TrigoScreenState
             children: [
 
               // INPUT FIELD
+
               Text(
 
                 "Angle Value",
@@ -342,11 +560,11 @@ class _TrigoScreenState
               const SizedBox(height: 10),
 
               // INPUT + AC BUTTON
+
               Row(
 
                 children: [
 
-                  // INPUT FIELD
                   Expanded(
 
                     flex: 75,
@@ -411,6 +629,7 @@ class _TrigoScreenState
                   const SizedBox(width: 12),
 
                   // AC BUTTON
+
                   Expanded(
 
                     flex: 20,
@@ -436,26 +655,6 @@ class _TrigoScreenState
                           BorderRadius.circular(
                             18,
                           ),
-
-                          boxShadow: [
-
-                            BoxShadow(
-
-                              color:
-                              Colors.black
-                                  .withOpacity(
-                                0.08,
-                              ),
-
-                              blurRadius: 6,
-
-                              offset:
-                              const Offset(
-                                0,
-                                3,
-                              ),
-                            ),
-                          ],
                         ),
 
                         child: const Text(
@@ -482,6 +681,7 @@ class _TrigoScreenState
               const SizedBox(height: 24),
 
               // DROPDOWN
+
               Text(
 
                 "Unit",
@@ -573,6 +773,7 @@ class _TrigoScreenState
               const SizedBox(height: 30),
 
               // BUTTONS
+
               GridView.count(
 
                 shrinkWrap: true,
@@ -679,6 +880,7 @@ class _TrigoScreenState
               const SizedBox(height: 30),
 
               // RESULT BOX
+
               Container(
 
                 width: double.infinity,

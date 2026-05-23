@@ -3,6 +3,7 @@ import '../widgets/calc_button.dart';
 import '../utils/calculator_logic.dart';
 import 'history_screen.dart';
 import 'trigo_screen.dart';
+import 'geo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -26,10 +27,8 @@ class _HomeScreenState
   String expression = "";
   String result = "0";
 
-  // Tracks whether "=" was pressed
   bool isResultFinal = false;
 
-  // HISTORY LIST
   List<String> history = [];
 
   final List<String> buttons = [
@@ -45,7 +44,6 @@ class _HomeScreenState
     '00', '0', '.', '='
   ];
 
-  // CLEAR HISTORY
   void clearHistory() {
 
     setState(() {
@@ -101,32 +99,6 @@ class _HomeScreenState
               clearHistory,
             ),
       ),
-    ).then((_) {
-
-      setState(() {});
-    });
-  }
-
-  void openTrigoScreen() {
-
-    Navigator.pop(context);
-
-    Navigator.push(
-
-      context,
-
-      MaterialPageRoute(
-
-        builder: (_) =>
-            TrigoScreen(
-
-              isDark:
-              widget.isDark,
-
-              toggleTheme:
-              widget.toggleTheme,
-            ),
-      ),
     );
   }
 
@@ -134,7 +106,6 @@ class _HomeScreenState
 
     setState(() {
 
-      // CLEAR
       if (value == 'AC') {
 
         expression = "";
@@ -142,15 +113,15 @@ class _HomeScreenState
         isResultFinal = false;
       }
 
-      // BACKSPACE
       else if (value == '⌫') {
 
         if (expression.isNotEmpty) {
 
-          expression = expression.substring(
-            0,
-            expression.length - 1,
-          );
+          expression =
+              expression.substring(
+                0,
+                expression.length - 1,
+              );
 
           if (expression.isEmpty) {
 
@@ -180,7 +151,6 @@ class _HomeScreenState
         isResultFinal = false;
       }
 
-      // EQUALS
       else if (value == '=') {
 
         if (expression.isNotEmpty) {
@@ -190,7 +160,6 @@ class _HomeScreenState
           expression.length - 1
           ];
 
-          // Prevent "=" on incomplete equation
           if (![
             '+',
             '-',
@@ -204,7 +173,6 @@ class _HomeScreenState
 
             isResultFinal = true;
 
-            // SAVE HISTORY
             history.add(
               "$expression = $result",
             );
@@ -212,14 +180,10 @@ class _HomeScreenState
         }
       }
 
-      // NORMAL BUTTONS
       else {
 
-        // AFTER "=" BEHAVIOR
         if (isResultFinal) {
 
-          // If user presses number,
-          // start fresh calculation
           if (isNumberOrDot(value)) {
 
             expression = value;
@@ -232,8 +196,6 @@ class _HomeScreenState
             );
           }
 
-          // If user presses operator,
-          // continue calculation
           else if (isOperator(value)) {
 
             expression =
@@ -243,7 +205,6 @@ class _HomeScreenState
           isResultFinal = false;
         }
 
-        // NORMAL INPUT FLOW
         else {
 
           expression += value;
@@ -254,8 +215,6 @@ class _HomeScreenState
         expression.length - 1
         ];
 
-        // Prevent live calculation
-        // if expression ends with operator
         if ([
           '+',
           '-',
@@ -267,8 +226,8 @@ class _HomeScreenState
           return;
         }
 
-        // Live preview result
-        result = calculate(expression);
+        result =
+            calculate(expression);
       }
     });
   }
@@ -276,14 +235,12 @@ class _HomeScreenState
   @override
   Widget build(BuildContext context) {
 
-    // SCREEN SIZE
     double screenWidth =
         MediaQuery.of(context).size.width;
 
     double screenHeight =
         MediaQuery.of(context).size.height;
 
-    // RESPONSIVE VALUES
     double horizontalPadding =
         screenWidth * 0.05;
 
@@ -298,7 +255,6 @@ class _HomeScreenState
         ? 1.02
         : 1.12;
 
-    // COLORS
     final bgColor =
     widget.isDark
         ? const Color(0xFF0D1326)
@@ -318,7 +274,6 @@ class _HomeScreenState
 
       backgroundColor: bgColor,
 
-      // SIDEBAR
       drawer: Drawer(
 
         backgroundColor:
@@ -363,7 +318,42 @@ class _HomeScreenState
 
               const SizedBox(height: 40),
 
-              // TRIGONOMETRY BUTTON
+              // BASIC CALCULATOR
+              Container(
+
+                color:
+                widget.isDark
+                    ? const Color(0xFF1A2238)
+                    : Colors.grey.shade200,
+
+                child: ListTile(
+
+                  leading: Icon(
+
+                    Icons.calculate,
+
+                    color: Colors.orange,
+                  ),
+
+                  title: Text(
+
+                    "Basic Calculator",
+
+                    style: TextStyle(
+
+                      fontSize: 18,
+
+                      fontWeight:
+                      FontWeight.w600,
+
+                      color:
+                      primaryTextColor,
+                    ),
+                  ),
+                ),
+              ),
+
+              // TRIGONOMETRY
               ListTile(
 
                 leading: Icon(
@@ -392,8 +382,77 @@ class _HomeScreenState
                   ),
                 ),
 
-                onTap:
-                openTrigoScreen,
+                onTap: () {
+
+                  Navigator.pushReplacement(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder: (_) =>
+                          TrigoScreen(
+
+                            isDark:
+                            widget.isDark,
+
+                            toggleTheme:
+                            widget.toggleTheme,
+                          ),
+                    ),
+                  );
+                },
+              ),
+
+              // GEOMETRY
+              ListTile(
+
+                leading: Icon(
+
+                  Icons.hexagon_outlined,
+
+                  color:
+                  widget.isDark
+                      ? Colors.orange
+                      : Colors.deepOrange,
+                ),
+
+                title: Text(
+
+                  "Geometry",
+
+                  style: TextStyle(
+
+                    fontSize: 18,
+
+                    fontWeight:
+                    FontWeight.w500,
+
+                    color:
+                    primaryTextColor,
+                  ),
+                ),
+
+                onTap: () {
+
+                  Navigator.pushReplacement(
+
+                    context,
+
+                    MaterialPageRoute(
+
+                      builder: (_) =>
+                          GeoScreen(
+
+                            isDark:
+                            widget.isDark,
+
+                            toggleTheme:
+                            widget.toggleTheme,
+                          ),
+                    ),
+                  );
+                },
               ),
             ],
           ),
@@ -413,7 +472,6 @@ class _HomeScreenState
 
             children: [
 
-              // TOP BAR
               Row(
 
                 mainAxisAlignment:
@@ -466,7 +524,6 @@ class _HomeScreenState
 
               SizedBox(height: topGap),
 
-              // DISPLAY SECTION
               Expanded(
 
                 child: Column(
@@ -479,7 +536,6 @@ class _HomeScreenState
 
                   children: [
 
-                    // EQUATION
                     AnimatedDefaultTextStyle(
 
                       duration:
@@ -523,7 +579,6 @@ class _HomeScreenState
 
                     const SizedBox(height: 10),
 
-                    // RESULT
                     AnimatedDefaultTextStyle(
 
                       duration:
@@ -571,7 +626,6 @@ class _HomeScreenState
                 screenHeight * 0.02,
               ),
 
-              // HISTORY BUTTON
               Align(
 
                 alignment:
@@ -634,7 +688,6 @@ class _HomeScreenState
                 screenHeight * 0.02,
               ),
 
-              // BUTTONS
               Expanded(
 
                 flex: 2,
