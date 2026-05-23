@@ -34,6 +34,10 @@ class AppDrawer extends StatelessWidget {
   static const String
   ageRoute = '/age';
 
+
+  static const String
+  bmiRoute = '/bmi';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -326,6 +330,8 @@ class AppDrawer extends StatelessWidget {
                 temperatureRoute,
               ),
 
+              //UNIT CONVERTER
+
               drawerTile(
 
                 context: context,
@@ -340,6 +346,8 @@ class AppDrawer extends StatelessWidget {
                 unitRoute,
               ),
 
+              //AGE CALCULATOR
+
               drawerTile(
 
                 context: context,
@@ -352,6 +360,21 @@ class AppDrawer extends StatelessWidget {
 
                 routeName:
                 ageRoute,
+              ),
+
+            // BMI CALCLATOR
+              drawerTile(
+
+                context: context,
+
+                icon:
+                Icons.monitor_weight,
+
+                title:
+                'BMI Calculator',
+
+                routeName:
+                bmiRoute,
               ),
             ],
           ),

@@ -10,6 +10,7 @@ import 'screens/trigo_screen.dart';
 import 'screens/uni_screen.dart';
 import 'widgets/app_drawer.dart';
 import 'screens/age_screen.dart';
+import 'screens/bmi_screen.dart';
 
 void main() {
 
@@ -225,6 +226,17 @@ class _MyAppState
         AppDrawer.ageRoute:
 
             (_) => AgeScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        //BMI CALCULATOR
+        AppDrawer.bmiRoute:
+
+            (_) => BmiScreen(
 
           isDark: isDark,
 
