@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/app_drawer.dart';
 import '../utils/calculator_logic.dart';
 import '../widgets/calc_button.dart';
 
-import 'emi_screen.dart';
-import 'geo_screen.dart';
 import 'history_screen.dart';
-import 'trigo_screen.dart';
 
 class HomeScreen extends StatefulWidget {
 
@@ -157,69 +155,6 @@ class _HomeScreenState
     );
   }
 
-  void openTrigonometry() {
-
-    Navigator.pushReplacement(
-
-      context,
-
-      MaterialPageRoute(
-
-        builder: (_) =>
-            TrigoScreen(
-
-              isDark:
-              widget.isDark,
-
-              toggleTheme:
-              widget.toggleTheme,
-            ),
-      ),
-    );
-  }
-
-  void openGeometry() {
-
-    Navigator.pushReplacement(
-
-      context,
-
-      MaterialPageRoute(
-
-        builder: (_) =>
-            GeoScreen(
-
-              isDark:
-              widget.isDark,
-
-              toggleTheme:
-              widget.toggleTheme,
-            ),
-      ),
-    );
-  }
-
-  void openEmiCalculator() {
-
-    Navigator.pushReplacement(
-
-      context,
-
-      MaterialPageRoute(
-
-        builder: (_) =>
-            EmiScreen(
-
-              isDark:
-              widget.isDark,
-
-              toggleTheme:
-              widget.toggleTheme,
-            ),
-      ),
-    );
-  }
-
   void onButtonClick(
       String value,
       ) {
@@ -325,51 +260,6 @@ class _HomeScreenState
     });
   }
 
-  Widget buildDrawerItem({
-
-    required IconData icon,
-
-    required String title,
-
-    required Color primaryTextColor,
-
-    required VoidCallback onTap,
-  }) {
-
-    return ListTile(
-
-      leading: Icon(
-
-        icon,
-
-        color:
-        Theme.of(context)
-            .brightness ==
-            Brightness.dark
-            ? Colors.orange
-            : Colors.deepOrange,
-      ),
-
-      title: Text(
-
-        title,
-
-        style: TextStyle(
-
-          fontSize: 18,
-
-          fontWeight:
-          FontWeight.w500,
-
-          color:
-          primaryTextColor,
-        ),
-      ),
-
-      onTap: onTap,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
 
@@ -420,130 +310,10 @@ class _HomeScreenState
 
       backgroundColor: bgColor,
 
-      // DRAWER
+      drawer: const AppDrawer(
 
-      drawer: Drawer(
-
-        backgroundColor: bgColor,
-
-        child: SafeArea(
-
-          child: Column(
-
-            crossAxisAlignment:
-            CrossAxisAlignment.start,
-
-            children: [
-
-              const SizedBox(height: 40),
-
-              Padding(
-
-                padding:
-                const EdgeInsets.symmetric(
-                  horizontal: 24,
-                ),
-
-                child: Text(
-
-                  'CalcVerse',
-
-                  style: TextStyle(
-
-                    fontSize: 28,
-
-                    fontWeight:
-                    FontWeight.bold,
-
-                    color:
-                    primaryTextColor,
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // ACTIVE SCREEN
-
-              Container(
-
-                color:
-                isDark
-                    ? const Color(0xFF1A2238)
-                    : Colors.grey.shade200,
-
-                child: ListTile(
-
-                  leading: const Icon(
-
-                    Icons.calculate,
-
-                    color:
-                    Colors.orange,
-                  ),
-
-                  title: Text(
-
-                    'Basic Calculator',
-
-                    style: TextStyle(
-
-                      fontSize: 18,
-
-                      fontWeight:
-                      FontWeight.w600,
-
-                      color:
-                      primaryTextColor,
-                    ),
-                  ),
-                ),
-              ),
-
-              buildDrawerItem(
-
-                icon: Icons.functions,
-
-                title: 'Trigonometry',
-
-                primaryTextColor:
-                primaryTextColor,
-
-                onTap:
-                openTrigonometry,
-              ),
-
-              buildDrawerItem(
-
-                icon:
-                Icons.hexagon_outlined,
-
-                title: 'Geometry',
-
-                primaryTextColor:
-                primaryTextColor,
-
-                onTap:
-                openGeometry,
-              ),
-
-              buildDrawerItem(
-
-                icon:
-                Icons.currency_rupee,
-
-                title:
-                'EMI Calculator',
-
-                primaryTextColor:
-                primaryTextColor,
-
-                onTap:
-                openEmiCalculator,
-              ),
-            ],
-          ),
-        ),
+        currentRoute:
+        AppDrawer.basicCalculatorRoute,
       ),
 
       body: SafeArea(

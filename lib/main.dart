@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+
+import 'screens/emi_screen.dart';
+import 'screens/geo_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/trigo_screen.dart';
+
+import 'widgets/app_drawer.dart';
 
 void main() {
 
@@ -39,9 +45,10 @@ class _MyAppState
 
       debugShowCheckedModeBanner: false,
 
-      title: 'Calculator App',
+      title: 'CalcVerse',
 
       // LIGHT THEME
+
       theme: ThemeData(
 
         brightness: Brightness.light,
@@ -55,19 +62,24 @@ class _MyAppState
 
         splashColor: Colors.transparent,
 
-        highlightColor: Colors.transparent,
+        highlightColor:
+        Colors.transparent,
 
-        appBarTheme: const AppBarTheme(
+        appBarTheme:
+        const AppBarTheme(
 
           elevation: 0,
 
-          backgroundColor: Colors.white,
+          backgroundColor:
+          Colors.white,
 
-          foregroundColor: Colors.black,
+          foregroundColor:
+          Colors.black,
         ),
       ),
 
       // DARK THEME
+
       darkTheme: ThemeData(
 
         brightness: Brightness.dark,
@@ -81,16 +93,19 @@ class _MyAppState
 
         splashColor: Colors.transparent,
 
-        highlightColor: Colors.transparent,
+        highlightColor:
+        Colors.transparent,
 
-        appBarTheme: const AppBarTheme(
+        appBarTheme:
+        const AppBarTheme(
 
           elevation: 0,
 
           backgroundColor:
           Color(0xFF0D1326),
 
-          foregroundColor: Colors.white,
+          foregroundColor:
+          Colors.white,
         ),
       ),
 
@@ -99,12 +114,62 @@ class _MyAppState
           ? ThemeMode.dark
           : ThemeMode.light,
 
-      home: HomeScreen(
+      initialRoute:
+      AppDrawer.basicCalculatorRoute,
 
-        isDark: isDark,
+      routes: {
 
-        toggleTheme: toggleTheme,
-      ),
+        // BASIC CALCULATOR
+
+        AppDrawer
+            .basicCalculatorRoute:
+
+            (_) => HomeScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // TRIGONOMETRY
+
+        AppDrawer
+            .trigonometryRoute:
+
+            (_) => TrigoScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // GEOMETRY
+
+        AppDrawer
+            .geometryRoute:
+
+            (_) => GeoScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // EMI
+
+        AppDrawer.emiRoute:
+
+            (_) => EmiScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+      },
     );
   }
 }

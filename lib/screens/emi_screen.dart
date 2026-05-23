@@ -1,10 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
-
-import 'geo_screen.dart';
-import 'home_screen.dart';
-import 'trigo_screen.dart';
+import '../widgets/app_drawer.dart';
 
 class EmiScreen extends StatefulWidget {
   final bool isDark;
@@ -85,42 +81,6 @@ class _EmiScreenState extends State<EmiScreen> {
       totalInterest = '\u20b9 ${formatValue(interest)}';
       showResult = true;
     });
-  }
-
-  void openBasicCalculator() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => HomeScreen(
-          isDark: widget.isDark,
-          toggleTheme: widget.toggleTheme,
-        ),
-      ),
-    );
-  }
-
-  void openTrigonometry() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => TrigoScreen(
-          isDark: widget.isDark,
-          toggleTheme: widget.toggleTheme,
-        ),
-      ),
-    );
-  }
-
-  void openGeometry() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) => GeoScreen(
-          isDark: widget.isDark,
-          toggleTheme: widget.toggleTheme,
-        ),
-      ),
-    );
   }
 
   Widget buildInput({
@@ -208,25 +168,6 @@ class _EmiScreenState extends State<EmiScreen> {
     );
   }
 
-  Widget buildDrawerItem({
-    required IconData icon,
-    required String title,
-    required Color primaryText,
-    required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: Colors.orange,
-      ),
-      title: Text(
-        title,
-        style: TextStyle(color: primaryText),
-      ),
-      onTap: onTap,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
@@ -240,62 +181,8 @@ class _EmiScreenState extends State<EmiScreen> {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: bgColor,
-      drawer: Drawer(
-        backgroundColor: bgColor,
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Text(
-                  'CalcVerse',
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: primaryText,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
-              buildDrawerItem(
-                icon: Icons.calculate,
-                title: 'Basic Calculator',
-                primaryText: primaryText,
-                onTap: openBasicCalculator,
-              ),
-              buildDrawerItem(
-                icon: Icons.functions,
-                title: 'Trigonometry',
-                primaryText: primaryText,
-                onTap: openTrigonometry,
-              ),
-              buildDrawerItem(
-                icon: Icons.hexagon_outlined,
-                title: 'Geometry',
-                primaryText: primaryText,
-                onTap: openGeometry,
-              ),
-              Container(
-                color: isDark ? const Color(0xFF1A2238) : Colors.grey.shade200,
-                child: ListTile(
-                  leading: const Icon(
-                    Icons.currency_rupee,
-                    color: Colors.orange,
-                  ),
-                  title: Text(
-                    'EMI Calculator',
-                    style: TextStyle(
-                      color: primaryText,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      drawer: const AppDrawer(
+        currentRoute: AppDrawer.emiRoute,
       ),
       appBar: AppBar(
         elevation: 0,
