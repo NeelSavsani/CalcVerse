@@ -135,6 +135,27 @@ class _HomeScreenState
     ].contains(lastChar);
   }
 
+  String formatResult(
+      String value,
+      ) {
+
+    if (value.contains('.')) {
+
+      double? number =
+      double.tryParse(value);
+
+      if (number != null &&
+          number == number.toInt()) {
+
+        return number
+            .toInt()
+            .toString();
+      }
+    }
+
+    return value;
+  }
+
   void openHistoryScreen() {
 
     Navigator.push(
@@ -188,8 +209,10 @@ class _HomeScreenState
                 expression,
               )
               ? '0'
-              : calculate(
-            expression,
+              : formatResult(
+            calculate(
+              expression,
+            ),
           );
         }
 
@@ -206,8 +229,10 @@ class _HomeScreenState
             )) {
 
           result =
-              calculate(
-                expression,
+              formatResult(
+                calculate(
+                  expression,
+                ),
               );
 
           isResultFinal = true;
@@ -229,8 +254,10 @@ class _HomeScreenState
           result =
           value == '.'
               ? '0'
-              : calculate(
-            expression,
+              : formatResult(
+            calculate(
+              expression,
+            ),
           );
         }
 
@@ -252,10 +279,11 @@ class _HomeScreenState
         expression,
       )) {
 
-        result =
-            calculate(
-              expression,
-            );
+        result = formatResult(
+          calculate(
+            expression,
+          ),
+        );
       }
     });
   }
@@ -308,7 +336,11 @@ class _HomeScreenState
 
     return Scaffold(
 
-      backgroundColor: bgColor,
+      resizeToAvoidBottomInset:
+      false,
+
+      backgroundColor:
+      bgColor,
 
       drawer: const AppDrawer(
 
@@ -351,9 +383,23 @@ class _HomeScreenState
 
                         onPressed: () {
 
-                          Scaffold.of(
-                            context,
-                          ).openDrawer();
+                          FocusManager.instance
+                              .primaryFocus
+                              ?.unfocus();
+
+                          Future.delayed(
+
+                            const Duration(
+                              milliseconds: 100,
+                            ),
+
+                                () {
+
+                              Scaffold.of(
+                                context,
+                              ).openDrawer();
+                            },
+                          );
                         },
 
                         icon: Icon(
