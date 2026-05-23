@@ -18,6 +18,9 @@ class AppDrawer extends StatelessWidget {
   static const String
   emiRoute = '/emi';
 
+  static const String
+  gstRoute = '/gst';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -258,6 +261,22 @@ class AppDrawer extends StatelessWidget {
 
               routeName:
               emiRoute,
+            ),
+
+            // GST CALCULATOR
+
+            drawerTile(
+
+              context: context,
+
+              icon:
+              Icons.receipt_long,
+
+              title:
+              'GST Calculator',
+
+              routeName:
+              gstRoute,
             ),
           ],
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'screens/emi_screen.dart';
 import 'screens/geo_screen.dart';
+import 'screens/gst_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/trigo_screen.dart';
 
@@ -163,6 +164,18 @@ class _MyAppState
         AppDrawer.emiRoute:
 
             (_) => EmiScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // GST
+
+        AppDrawer.gstRoute:
+
+            (_) => GstScreen(
 
           isDark: isDark,
 
