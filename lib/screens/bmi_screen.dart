@@ -465,7 +465,7 @@ class _BmiScreenState extends State<BmiScreen> {
                       ),
                       const SizedBox(height: 20),
                       SizedBox(
-                        height: 240,
+                        height: 300,
                         width: double.infinity,
                         child: Stack(
                           alignment: Alignment.center,
@@ -476,7 +476,7 @@ class _BmiScreenState extends State<BmiScreen> {
                               ),
                             ),
                             Positioned(
-                              top: 95,
+                              top: 0,
                               child: Column(
                                 children: [
                                   Text(
