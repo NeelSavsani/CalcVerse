@@ -7,7 +7,7 @@ import 'screens/gst_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/temperature_screen.dart';
 import 'screens/trigo_screen.dart';
-
+import 'screens/uni_screen.dart';
 import 'widgets/app_drawer.dart';
 
 void main() {
@@ -202,6 +202,17 @@ class _MyAppState
         AppDrawer.temperatureRoute:
 
             (_) => TemperatureScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        //UNIT CONVERTER
+        AppDrawer.unitRoute:
+
+            (_) => UniScreen(
 
           isDark: isDark,
 

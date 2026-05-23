@@ -28,6 +28,9 @@ class AppDrawer extends StatelessWidget {
   temperatureRoute =
       '/temperature';
 
+  static const String
+  unitRoute = '/unit';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -318,6 +321,20 @@ class AppDrawer extends StatelessWidget {
 
                 routeName:
                 temperatureRoute,
+              ),
+
+              drawerTile(
+
+                context: context,
+
+                icon:
+                Icons.straighten,
+
+                title:
+                'Unit Converter',
+
+                routeName:
+                unitRoute,
               ),
             ],
           ),
