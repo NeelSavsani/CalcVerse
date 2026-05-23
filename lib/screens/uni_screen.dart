@@ -337,20 +337,28 @@ class _UniScreenState
 
               onTap: () {
 
-                FocusScope.of(context)
-                    .unfocus();
+                FocusManager.instance.primaryFocus
+                    ?.unfocus();
 
-                scaffoldKey
-                    .currentState
-                    ?.openDrawer();
+                Future.delayed(
+
+                  const Duration(
+                    milliseconds: 100,
+                  ),
+
+                      () {
+
+                    scaffoldKey.currentState
+                        ?.openDrawer();
+                  },
+                );
               },
 
               child: Icon(
 
                 Icons.menu,
 
-                color:
-                primaryText,
+                color: primaryText,
               ),
             ),
 

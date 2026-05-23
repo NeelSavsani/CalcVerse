@@ -558,6 +558,8 @@ class _GeoScreenState
 
     return Scaffold(
 
+      resizeToAvoidBottomInset: false,
+
       key: scaffoldKey,
 
       backgroundColor: bgColor,
@@ -589,8 +591,14 @@ class _GeoScreenState
 
               onTap: () {
 
-                scaffoldKey.currentState
-                    ?.openDrawer();
+                FocusManager.instance.primaryFocus?.unfocus();
+
+                Future.delayed(
+                  const Duration(milliseconds: 100),
+                      () {
+                    scaffoldKey.currentState?.openDrawer();
+                  },
+                );
               },
 
               child: Icon(

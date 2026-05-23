@@ -40,7 +40,8 @@ dev_dependencies:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/Logo.png" # Pointing inside your declared assets directory
+  image_path: "assets/images/Logo.png" # Standard forward slashes relative to root
+
   # Optional Adaptive Icons for modern Android versions
   # adaptive_icon_background: "#FFFFFF"
   # adaptive_icon_foreground: "assets/images/app_icon_foreground.png"

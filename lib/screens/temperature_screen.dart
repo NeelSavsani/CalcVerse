@@ -408,9 +408,14 @@ class _TemperatureScreenState
 
               onTap: () {
 
-                scaffoldKey
-                    .currentState
-                    ?.openDrawer();
+                FocusManager.instance.primaryFocus?.unfocus();
+
+                Future.delayed(
+                  const Duration(milliseconds: 100),
+                      () {
+                    scaffoldKey.currentState?.openDrawer();
+                  },
+                );
               },
 
               child: Icon(

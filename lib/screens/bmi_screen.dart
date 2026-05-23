@@ -169,6 +169,7 @@ class _BmiScreenState extends State<BmiScreen> {
     isDark ? Colors.grey.shade400 : Colors.grey.shade700;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       key: scaffoldKey,
       backgroundColor: bgColor,
       drawer: const AppDrawer(
@@ -183,8 +184,14 @@ class _BmiScreenState extends State<BmiScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                FocusScope.of(context).unfocus();
-                scaffoldKey.currentState?.openDrawer();
+                FocusManager.instance.primaryFocus?.unfocus();
+
+                Future.delayed(
+                  const Duration(milliseconds: 100),
+                      () {
+                    scaffoldKey.currentState?.openDrawer();
+                  },
+                );
               },
               child: Icon(
                 Icons.menu,
