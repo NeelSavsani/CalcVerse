@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'screens/data_screen.dart';
 import 'screens/emi_screen.dart';
 import 'screens/geo_screen.dart';
 import 'screens/gst_screen.dart';
@@ -176,6 +177,18 @@ class _MyAppState
         AppDrawer.gstRoute:
 
             (_) => GstScreen(
+
+          isDark: isDark,
+
+          toggleTheme:
+          toggleTheme,
+        ),
+
+        // DATA CONVERTER
+
+        AppDrawer.dataRoute:
+
+            (_) => DataScreen(
 
           isDark: isDark,
 

@@ -21,6 +21,9 @@ class AppDrawer extends StatelessWidget {
   static const String
   gstRoute = '/gst';
 
+  static const String
+  dataRoute = '/data';
+
   final String currentRoute;
 
   const AppDrawer({
@@ -162,123 +165,142 @@ class AppDrawer extends StatelessWidget {
 
       child: SafeArea(
 
-        child: Column(
+        child: SingleChildScrollView(
 
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
+          child: Column(
 
-          children: [
+            crossAxisAlignment:
+            CrossAxisAlignment.start,
 
-            const SizedBox(height: 40),
+            children: [
 
-            // TITLE
+              const SizedBox(height: 40),
 
-            Padding(
+              // TITLE
 
-              padding:
-              const EdgeInsets.symmetric(
-                horizontal: 24,
-              ),
+              Padding(
 
-              child: Text(
+                padding:
+                const EdgeInsets.symmetric(
+                  horizontal: 24,
+                ),
 
-                'CalcVerse',
+                child: Text(
 
-                style: TextStyle(
+                  'CalcVerse',
 
-                  fontSize: 28,
+                  style: TextStyle(
 
-                  fontWeight:
-                  FontWeight.bold,
+                    fontSize: 28,
 
-                  color:
-                  primaryText,
+                    fontWeight:
+                    FontWeight.bold,
+
+                    color:
+                    primaryText,
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 40),
+              const SizedBox(height: 40),
 
-            // BASIC CALCULATOR
+              // BASIC CALCULATOR
 
-            drawerTile(
+              drawerTile(
 
-              context: context,
+                context: context,
 
-              icon:
-              Icons.calculate,
+                icon:
+                Icons.calculate,
 
-              title:
-              'Basic Calculator',
+                title:
+                'Basic Calculator',
 
-              routeName:
-              basicCalculatorRoute,
-            ),
+                routeName:
+                basicCalculatorRoute,
+              ),
 
-            // TRIGONOMETRY
+              // TRIGONOMETRY
 
-            drawerTile(
+              drawerTile(
 
-              context: context,
+                context: context,
 
-              icon:
-              Icons.functions,
+                icon:
+                Icons.functions,
 
-              title:
-              'Trigonometry',
+                title:
+                'Trigonometry',
 
-              routeName:
-              trigonometryRoute,
-            ),
+                routeName:
+                trigonometryRoute,
+              ),
 
-            // GEOMETRY
+              // GEOMETRY
 
-            drawerTile(
+              drawerTile(
 
-              context: context,
+                context: context,
 
-              icon:
-              Icons.hexagon_outlined,
+                icon:
+                Icons.hexagon_outlined,
 
-              title:
-              'Geometry',
+                title:
+                'Geometry',
 
-              routeName:
-              geometryRoute,
-            ),
+                routeName:
+                geometryRoute,
+              ),
 
-            // EMI CALCULATOR
+              // EMI CALCULATOR
 
-            drawerTile(
+              drawerTile(
 
-              context: context,
+                context: context,
 
-              icon:
-              Icons.currency_rupee,
+                icon:
+                Icons.currency_rupee,
 
-              title:
-              'EMI Calculator',
+                title:
+                'EMI Calculator',
 
-              routeName:
-              emiRoute,
-            ),
+                routeName:
+                emiRoute,
+              ),
 
-            // GST CALCULATOR
+              // GST CALCULATOR
 
-            drawerTile(
+              drawerTile(
 
-              context: context,
+                context: context,
 
-              icon:
-              Icons.receipt_long,
+                icon:
+                Icons.receipt_long,
 
-              title:
-              'GST Calculator',
+                title:
+                'GST Calculator',
 
-              routeName:
-              gstRoute,
-            ),
-          ],
+                routeName:
+                gstRoute,
+              ),
+
+              // DATA CONVERTER
+
+              drawerTile(
+
+                context: context,
+
+                icon:
+                Icons.storage,
+
+                title:
+                'Data Converter',
+
+                routeName:
+                dataRoute,
+              ),
+            ],
+          ),
         ),
       ),
     );
