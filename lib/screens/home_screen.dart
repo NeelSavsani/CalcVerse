@@ -40,34 +40,39 @@ class _HomeScreenState
 
   bool isResultFinal = false;
 
+  bool? isEqualPressed = false;
+
   final List<String> history = [];
 
-  final List<String> buttons = const [
+  final List<List<String>> buttonRows = const [
 
-    'AC',
-    backspace,
-    '%',
-    divide,
+    [
+      'AC',
+      backspace,
+      '(',
+      ')',
+    ],
 
-    '7',
-    '8',
-    '9',
-    multiply,
+    [
+      '^',
+      '%',
+      divide,
+      multiply,
+    ],
 
-    '4',
-    '5',
-    '6',
-    '-',
+    [
+      '7',
+      '8',
+      '9',
+      '-',
+    ],
 
-    '1',
-    '2',
-    '3',
-    '+',
-
-    '00',
-    '0',
-    '.',
-    '=',
+    [
+      '4',
+      '5',
+      '6',
+      '+',
+    ],
   ];
 
   void clearHistory() {
@@ -84,9 +89,30 @@ class _HomeScreenState
       '%',
       divide,
       multiply,
+      '^',
       '-',
       '+',
       '='
+    ].contains(value);
+  }
+
+  bool isMathOperator(String value) {
+
+    return [
+      '%',
+      divide,
+      multiply,
+      '^',
+      '-',
+      '+',
+    ].contains(value);
+  }
+
+  bool isParenthesis(String value) {
+
+    return [
+      '(',
+      ')',
     ].contains(value);
   }
 
@@ -130,6 +156,7 @@ class _HomeScreenState
       '-',
       multiply,
       divide,
+      '^',
       '%'
 
     ].contains(lastChar);
@@ -154,6 +181,296 @@ class _HomeScreenState
     }
 
     return value;
+  }
+
+  String lastInput(String value) {
+
+    return value[value.length - 1];
+  }
+
+  int openParenthesesCount(
+      String value,
+      ) {
+
+    int count = 0;
+
+    for (final String char
+    in value.split('')) {
+
+      if (char == '(') {
+
+        count++;
+      }
+
+      else if (char == ')') {
+
+        count--;
+      }
+    }
+
+    return count;
+  }
+
+  bool hasBalancedParentheses(
+      String value,
+      ) {
+
+    return openParenthesesCount(
+      value,
+    ) == 0;
+  }
+
+  bool canCalculateExpression(
+      String value,
+      ) {
+
+    if (value.isEmpty ||
+        endsWithOperator(
+          value,
+        )) {
+
+      return false;
+    }
+
+    final String lastChar =
+        lastInput(value);
+
+    return lastChar != '(' &&
+        lastChar != '.' &&
+        hasBalancedParentheses(
+          value,
+        );
+  }
+
+  bool hasDotInCurrentNumber() {
+
+    for (int i = expression.length - 1;
+    i >= 0;
+    i--) {
+
+      final String char =
+          expression[i];
+
+      if (char == '.') {
+
+        return true;
+      }
+
+      if (isMathOperator(char) ||
+          isParenthesis(char)) {
+
+        return false;
+      }
+    }
+
+    return false;
+  }
+
+  void updateResultPreview() {
+
+    if (canCalculateExpression(
+      expression,
+    )) {
+
+      result = formatResult(
+        calculate(
+          expression,
+        ),
+      );
+    }
+
+    else {
+
+      result = '0';
+    }
+  }
+
+  Color buttonColor(
+      String button,
+      bool isDark,
+      ) {
+
+    if (isOperator(button) ||
+        isParenthesis(button)) {
+
+      return Colors.orange;
+    }
+
+    return isDark
+        ? const Color(0xFF1A2238)
+        : const Color(0xFFF1F1F1);
+  }
+
+  Widget buildWideButton({
+    required String text,
+    required bool isDark,
+    required double normalButtonSize,
+  }) {
+
+    final Color color =
+        buttonColor(
+          text,
+          isDark,
+        );
+
+    final bool isLightButton =
+        color == const Color(0xFFF1F1F1);
+
+    final Color pressedColor =
+    isLightButton
+        ? Colors.grey.shade300
+        : color.withOpacity(0.75);
+
+    final bool equalPressed =
+        isEqualPressed ?? false;
+
+    return LayoutBuilder(
+
+      builder: (context, constraints) {
+
+        final double buttonWidth =
+            constraints.maxWidth < normalButtonSize
+                ? constraints.maxWidth
+                : normalButtonSize;
+
+        return Center(
+
+          child: SizedBox(
+
+            width:
+            buttonWidth,
+
+            height:
+            constraints.maxHeight,
+
+            child: GestureDetector(
+
+              onTapDown: (_) {
+
+                setState(() {
+
+                  isEqualPressed = true;
+                });
+              },
+
+              onTapUp: (_) {
+
+                setState(() {
+
+                  isEqualPressed = false;
+                });
+
+                onButtonClick(
+                  text,
+                );
+              },
+
+              onTapCancel: () {
+
+                setState(() {
+
+                  isEqualPressed = false;
+                });
+              },
+
+              child: AnimatedContainer(
+
+                duration:
+                const Duration(
+                  milliseconds: 80,
+                ),
+
+                curve:
+                Curves.easeOut,
+
+                transformAlignment:
+                Alignment.center,
+
+                transform:
+                Matrix4.identity()
+                  ..scale(
+                    equalPressed
+                        ? 0.88
+                        : 1.0,
+                  ),
+
+                decoration: BoxDecoration(
+
+                  color:
+                  equalPressed
+                      ? pressedColor
+                      : color,
+
+                  borderRadius:
+                  BorderRadius.circular(
+                    buttonWidth / 2,
+                  ),
+
+                  boxShadow: [
+
+                    BoxShadow(
+
+                      color:
+                      Colors.black.withOpacity(
+                        equalPressed
+                            ? 0.05
+                            : 0.12,
+                      ),
+
+                      blurRadius:
+                      equalPressed
+                          ? 3
+                          : 8,
+
+                      offset: Offset(
+                        0,
+                        equalPressed
+                            ? 2
+                            : 4,
+                      ),
+                    ),
+                  ],
+                ),
+
+                child: Center(
+
+                  child: AnimatedScale(
+
+                    duration:
+                    const Duration(
+                      milliseconds: 80,
+                    ),
+
+                    scale:
+                    equalPressed
+                        ? 0.92
+                        : 1.0,
+
+                    child: Text(
+
+                      text,
+
+                      style: TextStyle(
+
+                        fontSize: 32,
+
+                        fontWeight:
+                        FontWeight.w500,
+
+                        color:
+                        isLightButton
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void openHistoryScreen() {
@@ -203,17 +520,7 @@ class _HomeScreenState
                 expression.length - 1,
               );
 
-          result =
-          expression.isEmpty ||
-              endsWithOperator(
-                expression,
-              )
-              ? '0'
-              : formatResult(
-            calculate(
-              expression,
-            ),
-          );
+          updateResultPreview();
         }
 
         isResultFinal = false;
@@ -223,8 +530,12 @@ class _HomeScreenState
 
       if (value == '=') {
 
-        if (expression.isNotEmpty &&
-            !endsWithOperator(
+        if (isResultFinal) {
+
+          return;
+        }
+
+        if (canCalculateExpression(
               expression,
             )) {
 
@@ -241,6 +552,118 @@ class _HomeScreenState
             '$expression = $result',
           );
         }
+
+        return;
+      }
+
+      if (isMathOperator(value)) {
+
+        if (expression.isEmpty) {
+
+          if (value == '-') {
+
+            expression = value;
+          }
+
+          isResultFinal = false;
+
+          return;
+        }
+
+        if (endsWithOperator(
+          expression,
+        )) {
+
+          if (expression.length == 1 ||
+              expression[expression.length - 2] == '(') {
+
+            return;
+          }
+
+          expression =
+              expression.substring(
+                0,
+                expression.length - 1,
+              ) + value;
+
+          isResultFinal = false;
+
+          return;
+        }
+
+        if (lastInput(
+              expression,
+            ) == '(' &&
+            value != '-') {
+
+          return;
+        }
+      }
+
+      if (value == '(') {
+
+        if (isResultFinal) {
+
+          expression = value;
+
+          result = '0';
+
+          isResultFinal = false;
+
+          return;
+        }
+
+        if (expression.isEmpty ||
+            endsWithOperator(
+              expression,
+            ) ||
+            lastInput(
+              expression,
+            ) == '(') {
+
+          expression += value;
+        }
+
+        else {
+
+          expression += multiply + value;
+        }
+
+        updateResultPreview();
+
+        return;
+      }
+
+      if (value == ')') {
+
+        if (expression.isEmpty ||
+            openParenthesesCount(
+              expression,
+            ) <= 0 ||
+            endsWithOperator(
+              expression,
+            ) ||
+            lastInput(
+              expression,
+            ) == '(' ||
+            lastInput(
+              expression,
+            ) == '.') {
+
+          return;
+        }
+
+        expression += value;
+
+        updateResultPreview();
+
+        isResultFinal = false;
+
+        return;
+      }
+
+      if (value == '.' &&
+          hasDotInCurrentNumber()) {
 
         return;
       }
@@ -272,10 +695,22 @@ class _HomeScreenState
 
       else {
 
-        expression += value;
+        if (isNumberOrDot(value) &&
+            expression.isNotEmpty &&
+            lastInput(
+              expression,
+            ) == ')') {
+
+          expression += multiply + value;
+        }
+
+        else {
+
+          expression += value;
+        }
       }
 
-      if (!endsWithOperator(
+      if (canCalculateExpression(
         expression,
       )) {
 
@@ -313,11 +748,6 @@ class _HomeScreenState
 
     final double buttonSpacing =
         screenWidth * 0.025;
-
-    final double aspectRatio =
-    screenHeight < 700
-        ? 1.02
-        : 1.12;
 
     final Color bgColor =
     isDark
@@ -629,59 +1059,173 @@ class _HomeScreenState
 
                 flex: 2,
 
-                child: GridView.builder(
+                child: LayoutBuilder(
 
-                  physics:
-                  const NeverScrollableScrollPhysics(),
+                  builder: (context, constraints) {
 
-                  padding:
-                  EdgeInsets.zero,
+                    const int columnCount = 4;
+                    const int rowCount = 6;
 
-                  itemCount:
-                  buttons.length,
+                    final double buttonWidth =
+                        (constraints.maxWidth -
+                            (buttonSpacing *
+                                (columnCount - 1))) /
+                            columnCount;
 
-                  gridDelegate:
-                  SliverGridDelegateWithFixedCrossAxisCount(
+                    final double buttonHeight =
+                        (constraints.maxHeight -
+                            (buttonSpacing *
+                                (rowCount - 1))) /
+                            rowCount;
 
-                    crossAxisCount: 4,
+                    Widget normalButton(
+                        String button,
+                        ) {
 
-                    crossAxisSpacing:
-                    buttonSpacing,
+                      return SizedBox(
 
-                    mainAxisSpacing:
-                    buttonSpacing,
+                        width:
+                        buttonWidth,
 
-                    childAspectRatio:
-                    aspectRatio,
-                  ),
+                        height:
+                        buttonHeight,
 
-                  itemBuilder:
-                      (context, index) {
+                        child: CalcButton(
 
-                    final String button =
-                    buttons[index];
+                          text:
+                          button,
 
-                    return CalcButton(
-
-                      text: button,
-
-                      color:
-                      isOperator(button)
-
-                          ? Colors.orange
-
-                          : isDark
-
-                          ? const Color(
-                          0xFF1A2238)
-
-                          : const Color(
-                          0xFFF1F1F1),
-
-                      onTap: () =>
-                          onButtonClick(
+                          color:
+                          buttonColor(
                             button,
+                            isDark,
                           ),
+
+                          onTap: () =>
+                              onButtonClick(
+                                button,
+                              ),
+                        ),
+                      );
+                    }
+
+                    Widget buttonRow(
+                        List<String> row,
+                        ) {
+
+                      return SizedBox(
+
+                        height:
+                        buttonHeight,
+
+                        child: Row(
+
+                          children: [
+
+                            for (int i = 0;
+                            i < row.length;
+                            i++) ...[
+
+                              normalButton(
+                                row[i],
+                              ),
+
+                              if (i != row.length - 1)
+                                SizedBox(
+                                  width: buttonSpacing,
+                                ),
+                            ],
+                          ],
+                        ),
+                      );
+                    }
+
+                    return Column(
+
+                      children: [
+
+                        for (final List<String> row
+                        in buttonRows) ...[
+
+                          buttonRow(
+                            row,
+                          ),
+
+                          SizedBox(
+                            height:
+                            buttonSpacing,
+                          ),
+                        ],
+
+                        SizedBox(
+
+                          height:
+                          (buttonHeight * 2) +
+                              buttonSpacing,
+
+                          child: Row(
+
+                            crossAxisAlignment:
+                            CrossAxisAlignment
+                                .stretch,
+
+                            children: [
+
+                              SizedBox(
+
+                                width:
+                                (buttonWidth * 3) +
+                                    (buttonSpacing * 2),
+
+                                child: Column(
+
+                                  children: [
+
+                                    buttonRow(
+                                      const [
+                                        '1',
+                                        '2',
+                                        '3',
+                                      ],
+                                    ),
+
+                                    SizedBox(
+                                      height:
+                                      buttonSpacing,
+                                    ),
+
+                                    buttonRow(
+                                      const [
+                                        '00',
+                                        '0',
+                                        '.',
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              SizedBox(
+                                width:
+                                buttonSpacing,
+                              ),
+
+                              SizedBox(
+
+                                width:
+                                buttonWidth,
+
+                                child: buildWideButton(
+                                  text: '=',
+                                  isDark: isDark,
+                                  normalButtonSize:
+                                  buttonHeight,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),
